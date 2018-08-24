@@ -5,7 +5,6 @@
 //  Created by Jasper Hartong on 24/08/2018.
 //  Copyright © 2018 Jasper Hartong. All rights reserved.
 //
-
 import AVFoundation
 
 
@@ -215,12 +214,13 @@ class ContinuousRecording: TimeStamped {
         // Setup session
         session = AVCaptureSession()
         if (session.canSetSessionPreset(config.capturePreset)) {
+            print(config.capturePreset.rawValue)
             session.sessionPreset = config.capturePreset
         } else { throw fragmentRecorderError.couldNotSetPreset }
         
         // Setup input
         input = AVCaptureScreenInput(displayID: screenId)
-        input.cropRect = CGRect()
+        input.cropRect = CGDisplayBounds(screenId) //CGRect(origin: CGPoint(x:0,y:0),size: CGSize(width:10,height:10))
         input.scaleFactor = 1.0
         input.capturesCursor = false
         input.capturesMouseClicks = false
@@ -239,6 +239,21 @@ class ContinuousRecording: TimeStamped {
         if session.canAddOutput(output) {
             session.addOutput(output)
         } else { throw fragmentRecorderError.couldNotAddOutput }
+        
+        /// Default to HEVC  when on 10.13 or newer and encoding is hardware supported?
+        /// Hardware encoding is supported on 6th gen Intel processor or newer.
+        output.setOutputSettings([
+            AVVideoCodecKey: AVVideoCodecType.h264,
+            AVVideoHeightKey: 540,
+            AVVideoWidthKey: 960,
+            AVVideoCompressionPropertiesKey: [
+                AVVideoProfileLevelKey: AVVideoProfileLevelH264BaselineAutoLevel,
+                AVVideoAllowFrameReorderingKey: false,
+//                AVVideoAverageBitRateKey: 512000,
+//                AVVideoMaxKeyFrameIntervalDurationKey: 5,
+//                AVVideoExpectedSourceFrameRateKey: config.framesPerSecond,
+            ]
+        ], for: output.connection(with: .video)!)
     }
     
     func start(onStartCallback: @escaping (() -> Void)) {

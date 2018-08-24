@@ -11,6 +11,7 @@
 		A42709D021305DEF000BF7C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A42709CF21305DEF000BF7C3 /* Assets.xcassets */; };
 		A42709D321305DEF000BF7C3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A42709D121305DEF000BF7C3 /* MainMenu.xib */; };
 		A42709DF21305DF0000BF7C3 /* ContinuousRecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709DE21305DF0000BF7C3 /* ContinuousRecorderTests.swift */; };
+		A42709EB213061D3000BF7C3 /* ContinuousRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		A42709DA21305DF0000BF7C3 /* ContinuousRecorderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContinuousRecorderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A42709DE21305DF0000BF7C3 /* ContinuousRecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousRecorderTests.swift; sourceTree = "<group>"; };
 		A42709E021305DF0000BF7C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousRecorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 		A42709CC21305DEE000BF7C3 /* ContinuousRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				A42709E9213061A9000BF7C3 /* Models */,
 				A42709CD21305DEE000BF7C3 /* AppDelegate.swift */,
 				A42709CF21305DEF000BF7C3 /* Assets.xcassets */,
 				A42709D121305DEF000BF7C3 /* MainMenu.xib */,
@@ -90,6 +93,14 @@
 				A42709E021305DF0000BF7C3 /* Info.plist */,
 			);
 			path = ContinuousRecorderTests;
+			sourceTree = "<group>";
+		};
+		A42709E9213061A9000BF7C3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A42709EB213061D3000BF7C3 /* ContinuousRecorder.swift in Sources */,
 				A42709CE21305DEE000BF7C3 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

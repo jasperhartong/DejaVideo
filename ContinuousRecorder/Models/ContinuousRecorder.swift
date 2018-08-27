@@ -35,7 +35,7 @@ struct ContinuousRecordingConfig {
     let retention: Double = 300.0
     // Config defining quality & size
     let capturePreset: AVCaptureSession.Preset = .qHD960x540
-    let framesPerSecond: Int32 = 5
+    let framesPerSecond: Int32 = 1
     // Config defining in how many files to separate, defines diskspace
     let fragmentInterval: Double = 30.0
 }
@@ -51,6 +51,31 @@ class RecordingFragment: TimeStamped {
     private let index: Int
     private let fileNamePrefix = "RecordingFragment"
     private let fileURL: URL
+    private var grabFrameTimer: Timer!
+
+    func startGrabFrameTimer() {
+        // first fire immediatly
+        grabFrameTimerFired()
+        grabFrameTimer = Timer.scheduledTimer(
+            timeInterval: 1.0,
+            target: self,
+            selector: #selector(grabFrameTimerFired),
+            userInfo: nil,
+            repeats: true)
+    }
+    
+    @objc func grabFrameTimerFired() {
+        let queue = DispatchQueue(label:"test", qos: .background)
+        queue.async {
+            print("\(self.description)::\(#function)")
+            if (self.delegate.output.isRecordingPaused) {
+                self.delegate.output.resumeRecording()
+            } else {
+                self.delegate.output.pauseRecording()
+            }
+        }
+        
+    }
     
     private var isCurrentFragment: Bool {
         return index == manager.nextFragmentCount - 1
@@ -79,6 +104,13 @@ class RecordingFragment: TimeStamped {
     
     func start() {
         delegate.output.startRecording(to: fileURL, recordingDelegate: delegate)
+        delegate.output.pauseRecording()
+        startGrabFrameTimer()
+    }
+    
+    func stop() {
+        grabFrameTimer.invalidate()
+        modificationDate = Date()
     }
     
     var videoAssetTrack: AVAssetTrack? {
@@ -121,9 +153,9 @@ class RecordingFragmentManager {
     private func nextFragment() {
         let next = RecordingFragment(self, delegate, nextFragmentCount)
         next.start()
-        // Now that the next is started, the last is stopped, update it's modification date
+        // Now that the next is stop the previous
         if let prev = recordingFragments.last {
-            prev.modificationDate = Date()
+            prev.stop()
         }
         recordingFragments.append(next)
         // Keep track of amount of fragments created during complete session
@@ -222,8 +254,8 @@ class ContinuousRecording: TimeStamped {
         input = AVCaptureScreenInput(displayID: screenId)
         input.cropRect = CGDisplayBounds(screenId) //CGRect(origin: CGPoint(x:0,y:0),size: CGSize(width:10,height:10))
         input.scaleFactor = 1.0
-        input.capturesCursor = false
-        input.capturesMouseClicks = false
+        input.capturesCursor = true
+        input.capturesMouseClicks = true
         input.minFrameDuration = CMTimeMake(1, self.config.framesPerSecond)
         
         if session.canAddInput(input) {
@@ -258,10 +290,13 @@ class ContinuousRecording: TimeStamped {
     
     func start(onStartCallback: @escaping (() -> Void)) {
         if !session.isRunning {
-            fragmentManager.setDelegate(self)
-            self.onStartCallback = onStartCallback
-            session.startRunning()
-            fragmentManager.startFragmentTimer()
+            let queue = DispatchQueue(label:"test", qos: .background)
+            queue.async {
+                self.fragmentManager.setDelegate(self)
+                self.onStartCallback = onStartCallback
+                self.session.startRunning()
+                self.fragmentManager.startFragmentTimer()
+            }
         }
     }
     func stop(clearFragments: Bool = false) {
@@ -279,11 +314,11 @@ class ContinuousRecording: TimeStamped {
     }
     
     var isPreparingRecording: Bool {
-        return session.isRunning && !output.isRecording
+        return session.isRunning && !isRecording
     }
     
     var isRecording:Bool {
-        return output.isRecording
+        return output.isRecording || output.isRecordingPaused
     }
     
     func renderCurrentRetention(_ destination: URL, _ completion: @escaping ((URL?, Error?) -> Void)){

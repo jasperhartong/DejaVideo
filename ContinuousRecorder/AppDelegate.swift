@@ -79,6 +79,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         recording.renderCurrentRetention(destination, {(destination, error) -> Void in
             if let destination = destination {
                 print("\(destination)")
+                NSWorkspace.shared.open(destination)
             }
             if let error = error {
                 print("\(error)")

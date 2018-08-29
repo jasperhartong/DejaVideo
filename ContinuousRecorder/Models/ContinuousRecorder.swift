@@ -23,19 +23,13 @@ import AVFoundation
  */
 
 enum fragmentRecorderError: Error {
-    case invalidAudioDevice
-    case couldNotAddScreen
-    case couldNotAddMic
-    case couldNotAddOutput
-    case couldNotSetPreset
+    case couldNotAddScreen  // TODO: use me ?
     case couldNotExport
 }
 
 struct ContinuousRecordingConfig {
     // How long do we retain recordings for? (seconds)
     let retention: Double = 60.0
-    // Config defining quality & size
-    let capturePreset: AVCaptureSession.Preset = .qHD960x540
     // Config defining in how many files to separate, defines diskspace
     let fragmentInterval: Double = 0.5
 }

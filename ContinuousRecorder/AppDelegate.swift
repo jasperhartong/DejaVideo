@@ -74,9 +74,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func grab() {
-        let homeURL = FileManager.default.homeDirectoryForCurrentUser
-        let desktopURL = homeURL.appendingPathComponent("Desktop/")
-        recording.renderCurrentRetention(desktopURL, {(destination, error) -> Void in
+        
+        let destination = NSURL.fileURL(withPathComponents: [ NSTemporaryDirectory(), "test.mov"])!
+        recording.renderCurrentRetention(destination, {(destination, error) -> Void in
             if let destination = destination {
                 print("\(destination)")
             }

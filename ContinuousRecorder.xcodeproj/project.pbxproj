@@ -12,6 +12,8 @@
 		A42709D321305DEF000BF7C3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A42709D121305DEF000BF7C3 /* MainMenu.xib */; };
 		A42709DF21305DF0000BF7C3 /* ContinuousRecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709DE21305DF0000BF7C3 /* ContinuousRecorderTests.swift */; };
 		A42709EB213061D3000BF7C3 /* ContinuousRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */; };
+		A4F09C1421370B740062753D /* VidWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F09C1321370B740062753D /* VidWriter.swift */; };
+		A4F09C1621370D370062753D /* RepeatingBackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F09C1521370D370062753D /* RepeatingBackgroundTimer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +37,8 @@
 		A42709DE21305DF0000BF7C3 /* ContinuousRecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousRecorderTests.swift; sourceTree = "<group>"; };
 		A42709E021305DF0000BF7C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousRecorder.swift; sourceTree = "<group>"; };
+		A4F09C1321370B740062753D /* VidWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VidWriter.swift; sourceTree = "<group>"; };
+		A4F09C1521370D370062753D /* RepeatingBackgroundTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatingBackgroundTimer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +80,7 @@
 		A42709CC21305DEE000BF7C3 /* ContinuousRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				A4F09C1221370B610062753D /* Utils */,
 				A42709E9213061A9000BF7C3 /* Models */,
 				A42709CD21305DEE000BF7C3 /* AppDelegate.swift */,
 				A42709CF21305DEF000BF7C3 /* Assets.xcassets */,
@@ -101,6 +106,15 @@
 				A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		A4F09C1221370B610062753D /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				A4F09C1321370B740062753D /* VidWriter.swift */,
+				A4F09C1521370D370062753D /* RepeatingBackgroundTimer.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,6 +218,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A42709EB213061D3000BF7C3 /* ContinuousRecorder.swift in Sources */,
+				A4F09C1621370D370062753D /* RepeatingBackgroundTimer.swift in Sources */,
+				A4F09C1421370B740062753D /* VidWriter.swift in Sources */,
 				A42709CE21305DEE000BF7C3 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

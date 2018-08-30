@@ -11,7 +11,7 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     @objc var recording: ContinuousRecording!
-    private var recObservation: NSKeyValueObservation?
+    private var observers = [NSKeyValueObservation]()
     
     private var statusItem : NSStatusItem? = nil
     private let itemStart: NSMenuItem = NSMenuItem(title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: "")
@@ -35,11 +35,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.terminate(self)
             return
         }
-        
-        recObservation = self.recording.observe(\ContinuousRecording.isRecording) { recording, observedChange in
-            self.updateMenuImage()
-            self.updateMenuItems()
-        }
+        observeRecording()
+    }
+    
+    private func observeRecording() {
+        observers = [
+            self.recording.observe(\ContinuousRecording.isRecording) { recording, observedChange in
+                self.updateMenuImage()
+                self.updateMenuItems()
+            }
+        ]
     }
     
     private func createMenu () {

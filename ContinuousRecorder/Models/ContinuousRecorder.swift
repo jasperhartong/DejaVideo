@@ -50,7 +50,6 @@ class TimeStamped: NSObject {
 
 class RecordingFragment: TimeStamped {
     private let manager: RecordingFragmentManager
-    private let delegate: ContinuousRecording
     private let index: Int
     private let fileNamePrefix = "RecordingFragment"
     private let fileURL: URL
@@ -66,9 +65,8 @@ class RecordingFragment: TimeStamped {
         return "RecordingFragment:: \(fileURL)"
     }
     
-    init(_ manager: RecordingFragmentManager, _ delegate: ContinuousRecording, _ index: Int) {
+    init(_ manager: RecordingFragmentManager, _ index: Int) {
         self.manager = manager
-        self.delegate = delegate
         self.index = index
         self.fileURL = NSURL.fileURL(withPathComponents: [
             manager.fragmentDirectory,
@@ -100,8 +98,6 @@ class RecordingFragment: TimeStamped {
 }
 
 class RecordingFragmentManager {
-    private var delegate: ContinuousRecording!
-    
     private var fragmentTimer: RepeatingBackgroundTimer!
     let fragmentDirectory = NSTemporaryDirectory()
     let sharedUniqueString = NSUUID().uuidString
@@ -130,7 +126,7 @@ class RecordingFragmentManager {
         Initiates a new fragment and appends to recordingFragments
      */
     private func nextFragment() {
-        let next = RecordingFragment(self, delegate, nextFragmentCount)
+        let next = RecordingFragment(self, nextFragmentCount)
         recordingFragments.append(next)
         // Keep track of amount of fragments created during complete session
         nextFragmentCount += 1
@@ -140,10 +136,6 @@ class RecordingFragmentManager {
     init(retention: Double, interval: Double) {
         self.retention = retention
         self.interval = interval
-    }
-    
-    func setDelegate(_ delegate: ContinuousRecording) {
-        self.delegate = delegate
     }
     
     func startFragmentTimer() {
@@ -219,7 +211,6 @@ class RecordingFragmentManager {
             return
         }
         isRecording = true
-        self.fragmentManager.setDelegate(self)
         self.fragmentManager.startFragmentTimer()
     }
 

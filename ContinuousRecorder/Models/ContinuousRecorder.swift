@@ -161,7 +161,9 @@ class RecordingFragmentManager {
     
     func invalidateFragmentTimer() {
         _isRecording = false
-        fragmentTimer.suspend()
+        if let timer = fragmentTimer {
+            timer.suspend()
+        }
     }
     
     var isRecording: Bool {
@@ -237,10 +239,6 @@ class ContinuousRecording: TimeStamped {
         if clearFragments {
             fragmentManager.clearAllFragments()
         }
-    }
-    
-    var isPreparingRecording: Bool {
-        return false
     }
     
     var isRecording: Bool {

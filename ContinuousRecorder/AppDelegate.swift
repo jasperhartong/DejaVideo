@@ -27,23 +27,38 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    private func updateMenuItems () {
-        // Defines function to run when the user clicks on the text on menu bar
-        //item?.action = #selector(AppDelegate.testMe)
+
+    private let itemStart: NSMenuItem = NSMenuItem(title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: "")
+    private let itemGrab: NSMenuItem = NSMenuItem(title: "Grab Recording", action: #selector(AppDelegate.grab), keyEquivalent: "")
+    private let itemStop: NSMenuItem = NSMenuItem(title: "Stop Recording", action: #selector(AppDelegate.stop), keyEquivalent: "")
+    private let itemQuitSeparator: NSMenuItem = NSMenuItem.separator()
+    private let itemQuit: NSMenuItem = NSMenuItem(title: "Quit", action: #selector(AppDelegate.quitMe), keyEquivalent: "")
+    
+    private func createMenu () {
         let menu = NSMenu()
-        if (recording.isRecording) {
-            menu.addItem(NSMenuItem(title: "Grab Recording", action: #selector(AppDelegate.grab), keyEquivalent: ""))
-            menu.addItem(NSMenuItem(title: "Stop Recording", action: #selector(AppDelegate.stop), keyEquivalent: ""))
-        } else if (!recording.isPreparingRecording) {
-            let startItem = NSMenuItem(title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: "")
-            startItem.isEnabled = false
-            menu.addItem(startItem)
-        } else {
-            menu.addItem(NSMenuItem(title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: ""))
+        for menuItem in [
+            itemStart,
+            itemGrab,
+            itemStop,
+            itemQuitSeparator,
+            itemQuit
+        ] {
+            menu.addItem(menuItem)
         }
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Quit", action: #selector(AppDelegate.quitMe), keyEquivalent: ""))
         item?.menu = menu
+        updateMenuItems()
+    }
+    
+    private func updateMenuItems () {
+        if (recording.isRecording) {
+            itemStop.isHidden = false
+            itemGrab.isHidden = false
+            itemStart.isHidden = true
+        } else {
+            itemStop.isHidden = true
+            itemGrab.isHidden = true
+            itemStart.isHidden = false
+        }
     }
     
     private func updateMenuImage () {
@@ -54,8 +69,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
+        createMenu()
         updateMenuImage()
-        updateMenuItems()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

@@ -33,6 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let itemStop: NSMenuItem = NSMenuItem(title: "Stop Recording", action: #selector(AppDelegate.stop), keyEquivalent: "")
     private let itemQuitSeparator: NSMenuItem = NSMenuItem.separator()
     private let itemQuit: NSMenuItem = NSMenuItem(title: "Quit", action: #selector(AppDelegate.quitMe), keyEquivalent: "")
+    private let imageRecordActive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRec"))!
+    private let imageRecordInactive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRecInactive"))!
     
     private func createMenu () {
         let menu = NSMenu()
@@ -61,8 +63,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    private func updateMenuImage () {
-        item?.image = NSImage(named: NSImage.Name(rawValue: "MenuRec"))
+    private func updateMenuImage() {
+        if recording.isRecording {
+            item?.image = imageRecordActive
+        } else {
+            item?.image = imageRecordInactive
+        }
     }
     
     // MARK: Application Lifecycle
@@ -86,6 +92,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.updateMenuItems()
         })
         updateMenuItems()
+        updateMenuImage()
     }
     
     @objc func grab() {
@@ -105,6 +112,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func stop() {
         recording.stop(clearFragments: true)
         updateMenuItems()
+        updateMenuImage()
     }
     
     @objc func quitMe() {

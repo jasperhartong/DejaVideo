@@ -97,14 +97,14 @@ class RecordingFragment: TimeStamped {
     }
 }
 
-class RecordingFragmentManager {
+class RecordingFragmentManager: TimeStamped {
     private var fragmentTimer: RepeatingBackgroundTimer!
     let fragmentDirectory = NSTemporaryDirectory()
     let sharedUniqueString = NSUUID().uuidString
     
     var recordingFragments: [RecordingFragment] = []
-    var nextFragmentCount = 0
-    var isRecording: Bool = false
+    @objc dynamic var nextFragmentCount = 0
+    @objc dynamic var isRecording: Bool = false
     
     private let retention: Double
     private let interval: Double
@@ -139,6 +139,9 @@ class RecordingFragmentManager {
     }
     
     func startFragmentTimer() {
+        if isRecording {
+            return
+        }
         isRecording = true
 
         // first fire immediatly
@@ -152,6 +155,9 @@ class RecordingFragmentManager {
     }
     
     func invalidateFragmentTimer() {
+        if !isRecording {
+            return
+        }
         isRecording = false
         if let timer = fragmentTimer {
             timer.suspend()
@@ -189,11 +195,9 @@ class RecordingFragmentManager {
 //    case idle
 //}
 
-@objcMembers class ContinuousRecording: TimeStamped {
-    private let fragmentManager: RecordingFragmentManager
+@objcMembers class ContinuousRecording: RecordingFragmentManager {
     private let config: ContinuousRecordingConfig
     public let screenId: CGDirectDisplayID
-    @objc dynamic var isRecording: Bool = false
     
     init(
         screenId: CGDirectDisplayID = CGMainDisplayID(),
@@ -201,42 +205,32 @@ class RecordingFragmentManager {
         ) throws {
         self.screenId = screenId
         self.config = config
-        self.fragmentManager = RecordingFragmentManager(
-            retention: config.retention,
-            interval: config.fragmentInterval)
+        super.init(retention: config.retention, interval: config.fragmentInterval)
     }
     
     func start() {
-        if isRecording {
-            return
-        }
-        isRecording = true
-        self.fragmentManager.startFragmentTimer()
+        startFragmentTimer()
     }
 
     func stop(clearFragments: Bool = false) {
-        if !isRecording {
-            return
-        }
-        isRecording = false
-        fragmentManager.invalidateFragmentTimer()
+        invalidateFragmentTimer()
 
         if clearFragments {
-            fragmentManager.clearAllFragments()
+            clearAllFragments()
         }
     }
     
     func renderCurrentRetention(_ destination: URL, _ completion: @escaping ((URL?, Error?) -> Void)){
-        guard let anImage = self.fragmentManager.recordingFragments[0].image else {
+        guard let anImage = self.recordingFragments[0].image else {
             completion(nil, fragmentRecorderError.couldNotExport)
             return
         }
         
         // Make sure to trim at where we are now
-        fragmentManager.invalidateFragmentTimer()
-        fragmentManager.startFragmentTimer()
+        invalidateFragmentTimer()
+        startFragmentTimer()
         
-        NSLog("Exporting \(fragmentManager.recordingFragments.count) fragments ")
+        NSLog("Exporting \(recordingFragments.count) fragments ")
 
         let queue = DispatchQueue(label:"export", qos: .utility)
         queue.async {
@@ -246,7 +240,7 @@ class RecordingFragmentManager {
                 width: anImage.width,
                 height: anImage.height)
             
-            for fragment in self.fragmentManager.recordingFragments {
+            for fragment in self.recordingFragments {
                 if let image = fragment.image {
                     images.append(image)
                 }
@@ -258,7 +252,7 @@ class RecordingFragmentManager {
             } catch {print(error.localizedDescription)}
             
             let vidWriter = VidWriter(url: destination, vidSettings: settings)
-            vidWriter.applyTimeWith(duration: Float(self.config.fragmentInterval), frameNumber: self.fragmentManager.recordingFragments.count)
+            vidWriter.applyTimeWith(duration: Float(self.config.fragmentInterval), frameNumber: self.recordingFragments.count)
             
             vidWriter.createMovieFrom(images: images, completion: { (destination) in
                 completion(destination, nil)

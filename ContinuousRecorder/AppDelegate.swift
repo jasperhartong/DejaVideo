@@ -21,6 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let itemQuit: NSMenuItem = NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit), keyEquivalent: "")
     private let imageRecordActive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRec"))!
     private let imageRecordInactive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRecInactive"))!
+    //    private let progressTimer: Timer // TODO: Add timer to update for progress
 
     @IBOutlet weak var window: NSWindow!
 
@@ -80,6 +81,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             statusItem?.image = imageRecordInactive
         }
+    }
+    
+    private func updateRecordingProgress() {
+//        itemGrab.title = "\(recording.allTimeFragmentCount) / 120"
     }
     
     // MARK: Application Lifecycle

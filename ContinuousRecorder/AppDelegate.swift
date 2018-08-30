@@ -10,8 +10,17 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var item : NSStatusItem? = nil
-    var recording: ContinuousRecording!
+    @objc var recording: ContinuousRecording!
+    private var recObservation: NSKeyValueObservation?
+    
+    private var statusItem : NSStatusItem? = nil
+    private let itemStart: NSMenuItem = NSMenuItem(title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: "")
+    private let itemGrab: NSMenuItem = NSMenuItem(title: "Grab Recording", action: #selector(AppDelegate.grab), keyEquivalent: "")
+    private let itemStop: NSMenuItem = NSMenuItem(title: "Stop Recording", action: #selector(AppDelegate.stop), keyEquivalent: "")
+    private let itemQuitSeparator: NSMenuItem = NSMenuItem.separator()
+    private let itemQuit: NSMenuItem = NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit), keyEquivalent: "")
+    private let imageRecordActive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRec"))!
+    private let imageRecordInactive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRecInactive"))!
 
     @IBOutlet weak var window: NSWindow!
 
@@ -24,17 +33,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if recording == nil {
             NSApplication.shared.terminate(self)
+            return
+        }
+        
+        recObservation = self.recording.observe(\ContinuousRecording.isRecording) { recording, observedChange in
+            self.updateMenuImage()
+            self.updateMenuItems()
         }
     }
-    
-
-    private let itemStart: NSMenuItem = NSMenuItem(title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: "")
-    private let itemGrab: NSMenuItem = NSMenuItem(title: "Grab Recording", action: #selector(AppDelegate.grab), keyEquivalent: "")
-    private let itemStop: NSMenuItem = NSMenuItem(title: "Stop Recording", action: #selector(AppDelegate.stop), keyEquivalent: "")
-    private let itemQuitSeparator: NSMenuItem = NSMenuItem.separator()
-    private let itemQuit: NSMenuItem = NSMenuItem(title: "Quit", action: #selector(AppDelegate.quitMe), keyEquivalent: "")
-    private let imageRecordActive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRec"))!
-    private let imageRecordInactive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRecInactive"))!
     
     private func createMenu () {
         let menu = NSMenu()
@@ -47,7 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ] {
             menu.addItem(menuItem)
         }
-        item?.menu = menu
+        statusItem?.menu = menu
         updateMenuItems()
     }
     
@@ -65,15 +71,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func updateMenuImage() {
         if recording.isRecording {
-            item?.image = imageRecordActive
+            statusItem?.image = imageRecordActive
         } else {
-            item?.image = imageRecordInactive
+            statusItem?.image = imageRecordInactive
         }
     }
     
     // MARK: Application Lifecycle
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         createMenu()
         updateMenuImage()
@@ -86,13 +92,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: Menu actions
     @objc func start() {
-        recording.start(onStartCallback: {()-> Void in
-            // it takes a bit to start up the recording session
-            print("started recording")
-            self.updateMenuItems()
-        })
-        updateMenuItems()
-        updateMenuImage()
+        recording.start()
     }
     
     @objc func grab() {
@@ -111,11 +111,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func stop() {
         recording.stop(clearFragments: true)
-        updateMenuItems()
-        updateMenuImage()
     }
     
-    @objc func quitMe() {
+    @objc func quit() {
         NSApplication.shared.terminate(self)
     }
 

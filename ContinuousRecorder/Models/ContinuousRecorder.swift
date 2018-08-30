@@ -103,12 +103,12 @@ class RecordingFragmentManager {
     private var delegate: ContinuousRecording!
     
     private var fragmentTimer: RepeatingBackgroundTimer!
-    private var _isRecording: Bool = false
     let fragmentDirectory = NSTemporaryDirectory()
     let sharedUniqueString = NSUUID().uuidString
     
     var recordingFragments: [RecordingFragment] = []
     var nextFragmentCount = 0
+    var isRecording: Bool = false
     
     private let retention: Double
     private let interval: Double
@@ -147,7 +147,7 @@ class RecordingFragmentManager {
     }
     
     func startFragmentTimer() {
-        _isRecording = true
+        isRecording = true
 
         // first fire immediatly
         fragmentTimerFired()
@@ -160,14 +160,10 @@ class RecordingFragmentManager {
     }
     
     func invalidateFragmentTimer() {
-        _isRecording = false
+        isRecording = false
         if let timer = fragmentTimer {
             timer.suspend()
         }
-    }
-    
-    var isRecording: Bool {
-        return _isRecording
     }
     
     /**
@@ -201,19 +197,11 @@ class RecordingFragmentManager {
 //    case idle
 //}
 
-class ContinuousRecording: TimeStamped {
+@objcMembers class ContinuousRecording: TimeStamped {
     private let fragmentManager: RecordingFragmentManager
     private let config: ContinuousRecordingConfig
     public let screenId: CGDirectDisplayID
-    
-    
-    private var onStartCallback: (() -> Void)?
-    private func didStart() {
-        if let onStartCallback = onStartCallback {
-            onStartCallback()
-            self.onStartCallback = nil
-        }
-    }
+    @objc dynamic var isRecording: Bool = false
     
     init(
         screenId: CGDirectDisplayID = CGMainDisplayID(),
@@ -226,23 +214,25 @@ class ContinuousRecording: TimeStamped {
             interval: config.fragmentInterval)
     }
     
-    func start(onStartCallback: @escaping (() -> Void)) {
-        if !isRecording {
-            self.fragmentManager.setDelegate(self)
-            self.onStartCallback = onStartCallback
-            self.fragmentManager.startFragmentTimer()
+    func start() {
+        if isRecording {
+            return
         }
+        isRecording = true
+        self.fragmentManager.setDelegate(self)
+        self.fragmentManager.startFragmentTimer()
     }
+
     func stop(clearFragments: Bool = false) {
+        if !isRecording {
+            return
+        }
+        isRecording = false
         fragmentManager.invalidateFragmentTimer()
 
         if clearFragments {
             fragmentManager.clearAllFragments()
         }
-    }
-    
-    var isRecording: Bool {
-        return fragmentManager.isRecording
     }
     
     func renderCurrentRetention(_ destination: URL, _ completion: @escaping ((URL?, Error?) -> Void)){

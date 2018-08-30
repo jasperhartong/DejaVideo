@@ -10,6 +10,7 @@ import AVFoundation
 
 
 /**
+ 
  * What happens if;
  * - Disk is full?
  * - Computer goes to sleep?
@@ -17,9 +18,17 @@ import AVFoundation
  * - The fps/ quality is changed (while recording)?
  * - the resolution is changed of the recorded display?
  * - the user is inactive for a long period/ becomes active after a long period
+ 
+ 
  * Additions:
  * - Make the separate methods unit-testable
  * - Make all idempotent
+ * - Ignore own menu window
+ * - Allow to ignore incognito windows
+ * - SystemWide Shortcut
+ * - Plugin architecture for tracking other things in a sliding window
+ * - Blurring facilities
+ 
  */
 
 enum fragmentRecorderError: Error {
@@ -108,12 +117,14 @@ class RecordingFragmentManager {
         nextFragment()
         vacuumFragments()
     }
-    
+
+    /// Release references to old fragments so their deinit is called
     private func vacuumFragments() {
         let minRetentionDate = Date().addingTimeInterval(-retention)
         recordingFragments = recordingFragments.filter{$0.creationDate > minRetentionDate}
     }
-    
+
+    /// Initiates a new fragment and appends to recordingFragments
     private func nextFragment() {
         let next = RecordingFragment(self, delegate, nextFragmentCount)
         recordingFragments.append(next)
@@ -132,6 +143,8 @@ class RecordingFragmentManager {
     }
     
     func startFragmentTimer() {
+        _isRecording = true
+
         // first fire immediatly
         fragmentTimerFired()
 
@@ -140,22 +153,19 @@ class RecordingFragmentManager {
             self.fragmentTimerFired()
         }
         fragmentTimer.resume()
-        
-
-        _isRecording = true
     }
     
     func invalidateFragmentTimer() {
-        fragmentTimer.suspend()
         _isRecording = false
+        fragmentTimer.suspend()
     }
     
     var isRecording: Bool {
         return _isRecording
     }
     
+    /// Release references to all fragments so their deinit is called
     func clearAllFragments() {
-        // deinits make sure to remove the file
         recordingFragments = []
     }
     
@@ -256,7 +266,6 @@ class ContinuousRecording: TimeStamped {
                     images.append(image)
                 }
             }
-
             // Note: Currently we always overwrite the destination by first deleting it
             // TODO: Add more error cases? Like when writing fails?
             do {
@@ -272,5 +281,4 @@ class ContinuousRecording: TimeStamped {
             })
         }
     }
-    
 }

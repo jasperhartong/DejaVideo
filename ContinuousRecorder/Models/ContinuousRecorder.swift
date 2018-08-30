@@ -118,13 +118,17 @@ class RecordingFragmentManager {
         vacuumFragments()
     }
 
-    /// Release references to old fragments so their deinit is called
+    /**
+        Release references to old fragments so their deinit is called
+    */
     private func vacuumFragments() {
         let minRetentionDate = Date().addingTimeInterval(-retention)
         recordingFragments = recordingFragments.filter{$0.creationDate > minRetentionDate}
     }
 
-    /// Initiates a new fragment and appends to recordingFragments
+    /**
+        Initiates a new fragment and appends to recordingFragments
+     */
     private func nextFragment() {
         let next = RecordingFragment(self, delegate, nextFragmentCount)
         recordingFragments.append(next)
@@ -164,7 +168,9 @@ class RecordingFragmentManager {
         return _isRecording
     }
     
-    /// Release references to all fragments so their deinit is called
+    /**
+        Release references to all fragments so their deinit is called
+     */
     func clearAllFragments() {
         recordingFragments = []
     }

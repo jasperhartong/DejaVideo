@@ -6,18 +6,20 @@
 //  Copyright © 2018 Jasper Hartong. All rights reserved.
 //
 
-/// USAGE
+/**
+ USAGE:
+ 
+     let settings = VidWriter.videoSettings(width: cgImg.width, height: cgImg.height)
+ 
+     // Note: There should be no file at the targetUrl or nothing will be written.
+     self.vidWriter = VidWriter(url: targetUrl!, vidSettings: settings)
+     self.vidWriter.applyTimeWith(duration: durationPerFrame, frameNumber: images.count)
+ 
+     self.vidWriter.createMovieFrom(images: images, completion: { (finalUrl) in
+        print("Completed")
+     })
 
-//    let settings = VidWriter.videoSettings(width: cgImg.width, height: cgImg.height)
-//
-//    // Note: There should be no file at the targetUrl or nothing will be written.
-//    self.vidWriter = VidWriter(url: targetUrl!, vidSettings: settings)
-//    self.vidWriter.applyTimeWith(duration: durationPerFrame, frameNumber: images.count)
-//
-//    self.vidWriter.createMovieFrom(images: images, completion: { (finalUrl) in
-//        print("Completed")
-//    })
-
+ */
 
 import AVFoundation
 import AppKit

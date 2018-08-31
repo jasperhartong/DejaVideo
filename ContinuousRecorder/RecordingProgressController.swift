@@ -23,7 +23,8 @@ class RecordingProgressController: NSViewController {
     
     // Outlets
     @IBOutlet weak var exportProgress: NSProgressIndicator!
-    @IBOutlet weak var circularProgress: NSProgressIndicator!
+    @IBOutlet weak var retentionProgress: NSProgressIndicator!
+    @IBOutlet weak var exportButton: NSButton!
     @IBAction func buttonClicked(_ sender: NSButton) {
         // Save to temporary location for now
         let destination = NSURL.fileURL(withPathComponents: [ NSTemporaryDirectory(), "temporary.mov"])!
@@ -48,6 +49,12 @@ class RecordingProgressController: NSViewController {
     
     private func toggleProgressTimer() {
         if recording.isRecording {
+            if let button = exportButton {
+                let cell = button.cell! as! NSButtonCell
+                cell.backgroundColor = NSColor.red
+//                cell.sound = NSSound(named: NSSound.Name("Morphy"))
+                
+            }
             progressTimer = Timer.scheduledTimer(
                 // set up an update timer that is similar to how often we record
                 timeInterval: recording.config.fragmentInterval,
@@ -64,8 +71,29 @@ class RecordingProgressController: NSViewController {
     }
     
     @objc private func updateProgress() {
-        circularProgress.maxValue = recording.config.retention / recording.config.fragmentInterval
-        circularProgress.doubleValue = Double(recording.recordingFragments.count)
+        let fragmentCount: Double = Double(recording.recordingFragments.count)
+        let fragmentInterval: Double = Double(recording.config.fragmentInterval)
+        let retention: Double = Double(recording.config.retention)
+        let maxFragmentCount: Double = retention / fragmentInterval
+        let exportableSeconds: Int = Int(fragmentCount * fragmentInterval)
+        var readableTime = "\(exportableSeconds) seconds"
+        if exportableSeconds == 1 {
+            readableTime = "second"
+        } else if exportableSeconds >= 120 {
+            readableTime = "\(exportableSeconds/60) minutes"
+        } else if exportableSeconds >= 60 {
+            readableTime = "minute"
+        }
+        
+        // update retentionProgress
+        retentionProgress.isHidden = false
+        retentionProgress.maxValue = maxFragmentCount
+        retentionProgress.doubleValue = fragmentCount
+        if fragmentCount >= maxFragmentCount {
+            retentionProgress.isHidden = true
+        }
+        // update exportButton
+        exportButton.title = "Export last \(readableTime)"
     }
     
     init(_ rec: ContinuousRecording) {

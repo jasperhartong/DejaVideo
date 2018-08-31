@@ -38,7 +38,7 @@ enum fragmentRecorderError: Error {
 
 struct ContinuousRecordingConfig {
     // How long do we retain recordings for? (seconds)
-    let retention: Double = 60.0
+    let retention: Double = 300.0
     // Config defining in how many files to separate, defines diskspace
     let fragmentInterval: Double = 0.5
 }

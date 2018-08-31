@@ -69,7 +69,7 @@ class VidWriter {
         self.frameTime = CMTimeMake(1, Int32(scale))
     }
     
-    func createMovieFrom(images: [CGImage], completion: @escaping (URL) -> Void) {
+    func createMovieFrom(fragments: [RecordingFragment], completion: @escaping (URL) -> Void) {
         
         self.assetWriter.startWriting()
         self.assetWriter.startSession(atSourceTime: kCMTimeZero)
@@ -77,7 +77,7 @@ class VidWriter {
         let mediaInputQueue = DispatchQueue(label: "MediaInputQueu")
         
         var i = 0
-        let frameNumber = images.count
+        let frameNumber = fragments.count
         
         self.writerInput.requestMediaDataWhenReady(on: mediaInputQueue) {
             
@@ -87,8 +87,9 @@ class VidWriter {
                     var sampleBuffer: CVPixelBuffer?
                     
                     autoreleasepool(invoking: {
-                        
-                        sampleBuffer = self.newPixelBufferFrom(cgImage: images[i])
+                        if let image = fragments[i].image, let point = fragments[i].mousePoint {
+                            sampleBuffer = self.newPixelBufferFrom(cgImage: self.drawText(cgimage:image, point:point))
+                        }
                     }) // End of autoreleasepool
                     
                     if sampleBuffer != nil {
@@ -120,6 +121,29 @@ class VidWriter {
                 }
             }
         }
+    }
+    
+    func drawText(cgimage :CGImage, point: NSPoint) ->CGImage {
+        let image = NSImage.init(cgImage: cgimage, size: NSZeroSize)
+        let text = "🔴"
+        let font = NSFont.boldSystemFont(ofSize: 12)
+        var imageRect:CGRect = CGRect(x:0, y:0, width: image.size.width / 2, height: image.size.height / 2)
+        print("\(image.size.width) x \(image.size.height)")
+        print("\(point.x) x \(point.y)")
+        let textRect = CGRect(x: ((point.x)/2)-10, y: ((image.size.height-point.y)/2)-10, width: 20, height: 20)
+//        let textStyle = NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        let textFontAttributes = [
+            NSAttributedStringKey.font: font,
+            NSAttributedStringKey.foregroundColor: NSColor.black
+        ]
+        let im:NSImage = NSImage(size: image.size)
+        let rep:NSBitmapImageRep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(image.size.width), pixelsHigh: Int(image.size.height), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .calibratedRGB, bytesPerRow: 0, bitsPerPixel: 0)!
+        im.addRepresentation(rep)
+        im.lockFocus()
+        image.draw(in: imageRect)
+        text.draw(in: textRect, withAttributes: textFontAttributes)
+        im.unlockFocus()
+        return im.cgImage(forProposedRect: &imageRect, context: nil, hints: nil)!
     }
     
     func newPixelBufferFrom(cgImage: CGImage) -> CVPixelBuffer? {

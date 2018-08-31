@@ -234,17 +234,17 @@ class RecordingFragmentManager: TimeStamped {
 
         let queue = DispatchQueue(label:"export", qos: .utility)
         queue.async {
-            var images: [CGImage] = []
+//            var images: [CGImage] = []
             let settings = VidWriter.videoSettings(
                 codec: AVVideoCodecType.h264,
                 width: anImage.width,
                 height: anImage.height)
             
-            for fragment in self.recordingFragments {
-                if let image = fragment.image {
-                    images.append(image)
-                }
-            }
+//            for fragment in self.recordingFragments {
+//                if let image = fragment.image {
+//                    images.append(image)
+//                }
+//            }
             // Note: Currently we always overwrite the destination by first deleting it
             // TODO: Add more error cases? Like when writing fails?
             do {
@@ -254,7 +254,7 @@ class RecordingFragmentManager: TimeStamped {
             let vidWriter = VidWriter(url: destination, vidSettings: settings)
             vidWriter.applyTimeWith(duration: Float(self.config.fragmentInterval), frameNumber: self.recordingFragments.count)
             
-            vidWriter.createMovieFrom(images: images, completion: { (destination) in
+            vidWriter.createMovieFrom(fragments: self.recordingFragments, completion: { (destination) in
                 self.clearAllFragments()
                 completion(destination, nil)
                 NSLog("Exporting fragments: DONE ")

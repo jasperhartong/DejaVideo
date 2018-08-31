@@ -12,6 +12,8 @@
 		A42709D321305DEF000BF7C3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A42709D121305DEF000BF7C3 /* MainMenu.xib */; };
 		A42709DF21305DF0000BF7C3 /* ContinuousRecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709DE21305DF0000BF7C3 /* ContinuousRecorderTests.swift */; };
 		A42709EB213061D3000BF7C3 /* ContinuousRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */; };
+		A4C0F1FB21381BCE00BF2215 /* RecordingProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4C0F1FA21381BCE00BF2215 /* RecordingProgressView.xib */; };
+		A4C0F1FD21381D1700BF2215 /* RecordingProgressController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C0F1FC21381D1700BF2215 /* RecordingProgressController.swift */; };
 		A4F09C1421370B740062753D /* VidWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F09C1321370B740062753D /* VidWriter.swift */; };
 		A4F09C1621370D370062753D /* RepeatingBackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F09C1521370D370062753D /* RepeatingBackgroundTimer.swift */; };
 /* End PBXBuildFile section */
@@ -37,6 +39,8 @@
 		A42709DE21305DF0000BF7C3 /* ContinuousRecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousRecorderTests.swift; sourceTree = "<group>"; };
 		A42709E021305DF0000BF7C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousRecorder.swift; sourceTree = "<group>"; };
+		A4C0F1FA21381BCE00BF2215 /* RecordingProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecordingProgressView.xib; sourceTree = "<group>"; };
+		A4C0F1FC21381D1700BF2215 /* RecordingProgressController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingProgressController.swift; sourceTree = "<group>"; };
 		A4F09C1321370B740062753D /* VidWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VidWriter.swift; sourceTree = "<group>"; };
 		A4F09C1521370D370062753D /* RepeatingBackgroundTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatingBackgroundTimer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -82,9 +86,11 @@
 			children = (
 				A4F09C1221370B610062753D /* Utils */,
 				A42709E9213061A9000BF7C3 /* Models */,
+				A4C0F1FC21381D1700BF2215 /* RecordingProgressController.swift */,
 				A42709CD21305DEE000BF7C3 /* AppDelegate.swift */,
 				A42709CF21305DEF000BF7C3 /* Assets.xcassets */,
 				A42709D121305DEF000BF7C3 /* MainMenu.xib */,
+				A4C0F1FA21381BCE00BF2215 /* RecordingProgressView.xib */,
 				A42709D421305DEF000BF7C3 /* Info.plist */,
 				A42709D521305DEF000BF7C3 /* ContinuousRecorder.entitlements */,
 			);
@@ -200,6 +206,7 @@
 			files = (
 				A42709D021305DEF000BF7C3 /* Assets.xcassets in Resources */,
 				A42709D321305DEF000BF7C3 /* MainMenu.xib in Resources */,
+				A4C0F1FB21381BCE00BF2215 /* RecordingProgressView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +227,7 @@
 				A42709EB213061D3000BF7C3 /* ContinuousRecorder.swift in Sources */,
 				A4F09C1621370D370062753D /* RepeatingBackgroundTimer.swift in Sources */,
 				A4F09C1421370B740062753D /* VidWriter.swift in Sources */,
+				A4C0F1FD21381D1700BF2215 /* RecordingProgressController.swift in Sources */,
 				A42709CE21305DEE000BF7C3 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

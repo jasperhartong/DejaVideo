@@ -103,7 +103,7 @@ class RecordingFragmentManager: TimeStamped {
     let sharedUniqueString = NSUUID().uuidString
     
     var recordingFragments: [RecordingFragment] = []
-    @objc dynamic var nextFragmentCount = 0
+    var nextFragmentCount = 0
     @objc dynamic var isRecording: Bool = false
     
     private let retention: Double
@@ -196,8 +196,8 @@ class RecordingFragmentManager: TimeStamped {
 //}
 
 @objcMembers class ContinuousRecording: RecordingFragmentManager {
-    private let config: ContinuousRecordingConfig
-    public let screenId: CGDirectDisplayID
+    let screenId: CGDirectDisplayID
+    let config: ContinuousRecordingConfig
     
     init(
         screenId: CGDirectDisplayID = CGMainDisplayID(),

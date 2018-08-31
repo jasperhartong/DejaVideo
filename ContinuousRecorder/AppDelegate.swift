@@ -14,28 +14,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var observers = [NSKeyValueObservation]()
     
     private var statusItem : NSStatusItem? = nil
-    private let itemStart: NSMenuItem = NSMenuItem(title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: "")
-    private let itemGrab: NSMenuItem = NSMenuItem(title: "Grab Recording", action: #selector(AppDelegate.grab), keyEquivalent: "")
-    private let itemStop: NSMenuItem = NSMenuItem(title: "Stop Recording", action: #selector(AppDelegate.stop), keyEquivalent: "")
+
+    // menu items
+    private let itemProgress: NSMenuItem = NSMenuItem()
+    private let itemStart: NSMenuItem = NSMenuItem(
+        title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: "")
+    private let itemStop: NSMenuItem = NSMenuItem(
+        title: "Stop Recording", action: #selector(AppDelegate.stop), keyEquivalent: "")
     private let itemQuitSeparator: NSMenuItem = NSMenuItem.separator()
-    private let itemQuit: NSMenuItem = NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit), keyEquivalent: "")
+    private let itemQuit: NSMenuItem = NSMenuItem(
+        title: "Quit", action: #selector(AppDelegate.quit), keyEquivalent: "")
+    
+    // Menu images
     private let imageRecordActive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRec"))!
     private let imageRecordInactive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRecInactive"))!
     //    private let progressTimer: Timer // TODO: Add timer to update for progress
 
-    @IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var recordingProgressView: NSView!
+    var recordingProgressController: RecordingProgressController!
 
     override init () {
         do {
             recording = try ContinuousRecording()
         } catch { print(error.localizedDescription) }
 
+        // complete init
         super.init()
+        
+        // Quit if no recording (can only be done after completing init)
+        if recording == nil { NSApplication.shared.terminate(self) }
+        
+        // Set up subview
+        recordingProgressController = RecordingProgressController(recording)
 
-        if recording == nil {
-            NSApplication.shared.terminate(self)
-            return
-        }
+        // Set up observers
         observeRecording()
     }
     
@@ -50,9 +62,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func createMenu () {
         let menu = NSMenu()
+
         for menuItem in [
+            itemProgress,
             itemStart,
-            itemGrab,
             itemStop,
             itemQuitSeparator,
             itemQuit
@@ -65,12 +78,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func updateMenuItems () {
         if (recording.isRecording) {
+            itemProgress.view = recordingProgressController.view
+            itemProgress.isHidden = false
             itemStop.isHidden = false
-            itemGrab.isHidden = false
             itemStart.isHidden = true
         } else {
+            itemProgress.view = nil
+            itemProgress.isHidden = true
             itemStop.isHidden = true
-            itemGrab.isHidden = true
             itemStart.isHidden = false
         }
     }
@@ -81,10 +96,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             statusItem?.image = imageRecordInactive
         }
-    }
-    
-    private func updateRecordingProgress() {
-//        itemGrab.title = "\(recording.allTimeFragmentCount) / 120"
     }
     
     // MARK: Application Lifecycle
@@ -103,20 +114,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: Menu actions
     @objc func start() {
         recording.start()
-    }
-    
-    @objc func grab() {
-        
-        let destination = NSURL.fileURL(withPathComponents: [ NSTemporaryDirectory(), "test.mov"])!
-        recording.renderCurrentRetention(destination, {(destination, error) -> Void in
-            if let destination = destination {
-                print("\(destination)")
-                NSWorkspace.shared.open(destination)
-            }
-            if let error = error {
-                print("\(error)")
-            }
-        })
     }
     
     @objc func stop() {

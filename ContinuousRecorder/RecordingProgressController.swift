@@ -52,7 +52,7 @@ class RecordingProgressController: NSViewController {
             if let button = exportButton {
                 let cell = button.cell! as! NSButtonCell
                 cell.backgroundColor = NSColor.red
-//                cell.sound = NSSound(named: NSSound.Name("Morphy"))
+                cell.sound = NSSound(named: NSSound.Name("Morphy"))
                 
             }
             progressTimer = Timer.scheduledTimer(

@@ -89,7 +89,6 @@ class VidWriter {
                     autoreleasepool(invoking: {
                         
                         sampleBuffer = self.newPixelBufferFrom(cgImage: images[i])
-                        
                     }) // End of autoreleasepool
                     
                     if sampleBuffer != nil {

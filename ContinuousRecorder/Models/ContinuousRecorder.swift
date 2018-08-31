@@ -255,6 +255,7 @@ class RecordingFragmentManager: TimeStamped {
             vidWriter.applyTimeWith(duration: Float(self.config.fragmentInterval), frameNumber: self.recordingFragments.count)
             
             vidWriter.createMovieFrom(images: images, completion: { (destination) in
+                self.clearAllFragments()
                 completion(destination, nil)
                 NSLog("Exporting fragments: DONE ")
             })

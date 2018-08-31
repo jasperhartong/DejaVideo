@@ -28,7 +28,7 @@ class RecordingProgressController: NSViewController {
     @IBAction func buttonClicked(_ sender: NSButton) {
         // Save to temporary location for now
         let destination = NSURL.fileURL(withPathComponents: [ NSTemporaryDirectory(), "temporary.mov"])!
-        // show we're doing something
+
         exportProgress.startAnimation(self)
         
         recording.renderCurrentRetention(destination, {(destination, error) -> Void in

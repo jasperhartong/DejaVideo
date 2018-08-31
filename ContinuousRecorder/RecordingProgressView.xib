@@ -23,6 +23,22 @@
                     <rect key="frame" x="8" y="0.0" width="209" height="45"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
+                        <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="PoJ-1l-JC9">
+                            <rect key="frame" x="174" y="19" width="16" height="16"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        </progressIndicator>
+                        <progressIndicator wantsLayer="YES" fixedFrame="YES" alphaValue="0.20000000000000001" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="ZfY-d3-OG3">
+                            <rect key="frame" x="27" y="0.0" width="161" height="20"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <contentFilters>
+                                <ciFilter name="CIAffineTransform">
+                                    <configuration>
+                                        <null key="inputImage"/>
+                                        <affineTransform key="inputTransform" m11="1" m12="0.0" m21="0.0" m22="1" tX="0.0" tY="0.0"/>
+                                    </configuration>
+                                </ciFilter>
+                            </contentFilters>
+                        </progressIndicator>
                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="veO-bN-dja">
                             <rect key="frame" x="13" y="6" width="184" height="41"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -41,22 +57,6 @@
                                 <action selector="buttonClicked:" target="-2" id="BwI-lm-Pgl"/>
                             </connections>
                         </button>
-                        <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="PoJ-1l-JC9">
-                            <rect key="frame" x="174" y="19" width="16" height="16"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        </progressIndicator>
-                        <progressIndicator wantsLayer="YES" fixedFrame="YES" alphaValue="0.20000000000000001" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="ZfY-d3-OG3">
-                            <rect key="frame" x="27" y="0.0" width="161" height="20"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <contentFilters>
-                                <ciFilter name="CIAffineTransform">
-                                    <configuration>
-                                        <null key="inputImage"/>
-                                        <affineTransform key="inputTransform" m11="1" m12="0.0" m21="0.0" m22="1" tX="0.0" tY="0.0"/>
-                                    </configuration>
-                                </ciFilter>
-                            </contentFilters>
-                        </progressIndicator>
                     </subviews>
                 </view>
             </subviews>

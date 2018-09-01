@@ -88,7 +88,21 @@ class VidWriter {
                     
                     autoreleasepool(invoking: {
                         if let image = fragments[i].image, let point = fragments[i].mousePoint {
-                            sampleBuffer = self.newPixelBufferFrom(cgImage: self.drawText(cgimage:image, point:point))
+                            var prevPoints: [CGPoint] = []
+                            switch i {
+                            case 0:
+                                break
+                            case 1:
+                                if let point1 = fragments[i-1].mousePoint {
+                                    prevPoints = [point1]
+                                }
+                            default:
+                                if let point1 = fragments[i-1].mousePoint, let point2 = fragments[i-2].mousePoint {
+                                    prevPoints = [point2, point1]
+                                }
+                            }
+                            sampleBuffer = self.newPixelBufferFrom(cgImage: self.overlayImage(cgImage:image, point:point, prevPoints: prevPoints))
+                            
                         }
                     }) // End of autoreleasepool
                     
@@ -123,27 +137,48 @@ class VidWriter {
         }
     }
     
-    func drawText(cgimage :CGImage, point: NSPoint) ->CGImage {
-        let image = NSImage.init(cgImage: cgimage, size: NSZeroSize)
-        let text = "🔴"
-        let font = NSFont.boldSystemFont(ofSize: 12)
-        var imageRect:CGRect = CGRect(x:0, y:0, width: image.size.width / 2, height: image.size.height / 2)
-        print("\(image.size.width) x \(image.size.height)")
-        print("\(point.x) x \(point.y)")
-        let textRect = CGRect(x: ((point.x)/2)-10, y: ((image.size.height-point.y)/2)-10, width: 20, height: 20)
-//        let textStyle = NSMutableParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
-        let textFontAttributes = [
-            NSAttributedStringKey.font: font,
-            NSAttributedStringKey.foregroundColor: NSColor.black
-        ]
-        let im:NSImage = NSImage(size: image.size)
-        let rep:NSBitmapImageRep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(image.size.width), pixelsHigh: Int(image.size.height), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .calibratedRGB, bytesPerRow: 0, bitsPerPixel: 0)!
-        im.addRepresentation(rep)
-        im.lockFocus()
-        image.draw(in: imageRect)
-        text.draw(in: textRect, withAttributes: textFontAttributes)
-        im.unlockFocus()
-        return im.cgImage(forProposedRect: &imageRect, context: nil, hints: nil)!
+    func overlayImage(cgImage: CGImage, point: NSPoint, prevPoints: [NSPoint]) -> CGImage {
+        let context = CGContext(data: nil, width: cgImage.width, height: cgImage.height,
+                                bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: 0,
+                                space: cgImage.colorSpace!,
+                                bitmapInfo: cgImage.bitmapInfo.rawValue)
+        let bounds = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
+        let flippedPoint = point.flipped(totalY: cgImage.height)
+
+        let pointerRect = CGRect(x: flippedPoint.x-10.0, y: flippedPoint.y-10.0, width: 20.0, height: 20.0)
+        if let context = context {
+            context.protectGState {
+                // add image
+                context.draw(cgImage, in: bounds)
+                // add circle
+                context.setFillColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0) // Red
+                context.fillEllipse(in: pointerRect)
+                // add circle stroke
+                context.setStrokeColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5) // White
+                context.setLineWidth(6.0)
+                context.strokeEllipse(in: pointerRect)
+                // add line
+                if !prevPoints.isEmpty {
+                    var flippedPrevPoints = prevPoints.map {$0.flipped(totalY: cgImage.height)}
+                    flippedPrevPoints.append(flippedPoint)
+                    let path = CGMutablePath()
+                    let pattern: [CGFloat] = [3.0, 12.0]
+                    path.move(to: flippedPrevPoints.first!)
+                    context.setStrokeColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 0.6) // Red
+                    context.setLineCap(.round)
+                    context.setLineDash(phase: 0, lengths: pattern)
+                    path.addLines(between: flippedPrevPoints)
+                    context.addPath(path)
+                    context.strokePath()
+                }
+                
+            }
+        }
+        if let cgImage = context?.makeImage() {
+            return cgImage
+        } else {
+            return cgImage
+        }
     }
     
     func newPixelBufferFrom(cgImage: CGImage) -> CVPixelBuffer? {

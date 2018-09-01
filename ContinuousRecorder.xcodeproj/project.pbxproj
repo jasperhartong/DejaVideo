@@ -90,10 +90,10 @@
 		A42709CC21305DEE000BF7C3 /* ContinuousRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				A4CD54D9213ADE7500F191E2 /* ViewControllers */,
 				A4CD54D4213ABC2400F191E2 /* Extensions */,
 				A4F09C1221370B610062753D /* Utils */,
 				A42709E9213061A9000BF7C3 /* Models */,
-				A4C0F1FC21381D1700BF2215 /* RecordingProgressController.swift */,
 				A42709CD21305DEE000BF7C3 /* AppDelegate.swift */,
 				A42709CF21305DEF000BF7C3 /* Assets.xcassets */,
 				A4C0F1FE21393A4D00BF2215 /* SoundEffects */,
@@ -137,6 +137,14 @@
 				A4CD54D7213ACE3400F191E2 /* NSpoint+flipped.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A4CD54D9213ADE7500F191E2 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				A4C0F1FC21381D1700BF2215 /* RecordingProgressController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		A4F09C1221370B610062753D /* Utils */ = {
@@ -407,7 +415,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = ContinuousRecorder/ContinuousRecorder.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ContinuousRecorder/Info.plist;
@@ -425,7 +432,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = ContinuousRecorder/ContinuousRecorder.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ContinuousRecorder/Info.plist;

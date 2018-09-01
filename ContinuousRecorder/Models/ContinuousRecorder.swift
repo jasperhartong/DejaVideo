@@ -38,9 +38,9 @@ enum fragmentRecorderError: Error {
 
 struct ContinuousRecordingConfig {
     // How long do we retain recordings for? (seconds)
-    let retention: Double = 300.0
+    let retention: Double = 120.0
     // Config defining in how many files to separate, defines diskspace
-    let fragmentInterval: Double = 0.5
+    let fragmentInterval: Double = 0.25
 }
 
 class TimeStamped: NSObject {
@@ -84,9 +84,9 @@ class RecordingFragment: TimeStamped {
             self.mousePoint = fakeEvent.location
         }
 
-        if let image = self.image, let point = self.mousePoint {
-            NSLog("\(image.hashValue) :: \(self.index) / \(manager.recordingFragments.count) :: \(point.x),\(point.y)")
-        }
+//        if let image = self.image, let point = self.mousePoint {
+//            NSLog("\(image.hashValue) :: \(self.index) / \(manager.recordingFragments.count) :: \(point.x),\(point.y)")
+//        }
     }
     
     func toPNG() {
@@ -234,17 +234,11 @@ class RecordingFragmentManager: TimeStamped {
 
         let queue = DispatchQueue(label:"export", qos: .utility)
         queue.async {
-//            var images: [CGImage] = []
             let settings = VidWriter.videoSettings(
                 codec: AVVideoCodecType.h264,
                 width: anImage.width,
                 height: anImage.height)
-            
-//            for fragment in self.recordingFragments {
-//                if let image = fragment.image {
-//                    images.append(image)
-//                }
-//            }
+
             // Note: Currently we always overwrite the destination by first deleting it
             // TODO: Add more error cases? Like when writing fails?
             do {
@@ -255,7 +249,7 @@ class RecordingFragmentManager: TimeStamped {
             vidWriter.applyTimeWith(duration: Float(self.config.fragmentInterval), frameNumber: self.recordingFragments.count)
             
             vidWriter.createMovieFrom(fragments: self.recordingFragments, completion: { (destination) in
-                self.clearAllFragments()
+                self.clearAllFragments() // TODO: It shouldn't actually be cleared completely here, as the frames captured while exporting will then also be dropped
                 completion(destination, nil)
                 NSLog("Exporting fragments: DONE ")
             })

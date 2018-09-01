@@ -10,6 +10,8 @@ import Foundation
 import Cocoa
 
 class RecordingProgressController: NSViewController {
+    private let savePanel: NSSavePanel
+
     // Observing the ContinuousRecording
     @objc private let recording: ContinuousRecording
     private var observers = [NSKeyValueObservation]()
@@ -26,9 +28,20 @@ class RecordingProgressController: NSViewController {
     @IBOutlet weak var retentionProgress: NSProgressIndicator!
     @IBOutlet weak var exportButton: NSButton!
     @IBAction func buttonClicked(_ sender: NSButton) {
-        // Save to temporary location for now
-        let destination = NSURL.fileURL(withPathComponents: [ NSTemporaryDirectory(), "temporary.mov"])!
-
+        // Open savePanel
+        // TODO: Menu not loosing focus. SavePanel not always displayed on top
+        savePanel.begin { (modalResponse) in
+            if modalResponse == NSApplication.ModalResponse.OK {
+                if let destination = self.savePanel.url {
+                    self.renderTo(destination: destination)
+                } else {
+                    print("Something went wrong")
+                }
+            }
+        }
+    }
+    
+    private func renderTo(destination: URL) {
         exportProgress.startAnimation(self)
         
         recording.renderCurrentRetention(destination, {(destination, error) -> Void in
@@ -98,6 +111,10 @@ class RecordingProgressController: NSViewController {
     
     init(_ rec: ContinuousRecording) {
         recording = rec
+        // setup savePanel
+        savePanel = NSSavePanel()
+        savePanel.allowedFileTypes = ["mp4"]
+        savePanel.allowsOtherFileTypes = false
         super.init(nibName: NSNib.Name(rawValue: "RecordingProgressView"), bundle: nil)
         observeRecording()
     }

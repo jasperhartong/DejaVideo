@@ -16,7 +16,6 @@ class RecordingProgressController: NSViewController {
         savePanel.allowedFileTypes = ["mp4"]
         savePanel.allowsOtherFileTypes = false
         savePanel.level = .modalPanel
-        
     }
     private func openSavePanel () {
         savePanelOpened?()
@@ -34,7 +33,7 @@ class RecordingProgressController: NSViewController {
                     print("Something went wrong")
                 }
             }
-            // turn off focus
+            // turn off app focus
             NSApp.activate(ignoringOtherApps: false)
         }
     }
@@ -48,7 +47,7 @@ class RecordingProgressController: NSViewController {
                 self.toggleProgressTimer()
             },
             self.recording.observe(\ContinuousRecording.isExporting) { recording, observedChange in
-                self.toggleExporting()
+                self.updateExportIndicator()
             }
         ]
     }
@@ -70,12 +69,18 @@ class RecordingProgressController: NSViewController {
             }
             if let error = error {
                 print("\(error)")
+                let alert = NSAlert()
+                alert.messageText = "Export Error"
+                alert.informativeText = "Something went wrong during export, please try again."
+                alert.alertStyle = .critical
+                alert.addButton(withTitle: "OK")
+                alert.runModal() // blocking
             }
         })
     }
     
     // Export indicator
-    private func toggleExporting() {
+    private func updateExportIndicator() {
         if recording.isExporting {
             exportProgress.startAnimation(self)
             exportButton.isEnabled = false
@@ -100,7 +105,7 @@ class RecordingProgressController: NSViewController {
                 // set up an update timer that is similar to how often we record
                 timeInterval: recording.config.fragmentInterval,
                 target: self,
-                selector: #selector(updateProgress),
+                selector: #selector(updateProgressIndicator),
                 userInfo: nil,
                 repeats: true)
 
@@ -112,7 +117,7 @@ class RecordingProgressController: NSViewController {
 
     }
     
-    @objc private func updateProgress() {
+    @objc private func updateProgressIndicator() {
         let fragmentCount: Double = Double(recording.recordingFragments.count)
         let fragmentInterval: Double = Double(recording.config.fragmentInterval)
         let retention: Double = Double(recording.config.retention)
@@ -138,10 +143,18 @@ class RecordingProgressController: NSViewController {
         exportButton.title = "Export last \(readableTime)"
     }
     
+    override func viewDidLayout() {
+        // Doubledowns on ensuring that the indicator states are always correct
+        updateExportIndicator()
+        updateProgressIndicator()
+    }
+    
     init(_ rec: ContinuousRecording) {
         recording = rec
         savePanel = NSSavePanel()
+
         super.init(nibName: NSNib.Name(rawValue: "RecordingProgressView"), bundle: nil)
+
         configureSavePanel()
         observeRecording()
     }

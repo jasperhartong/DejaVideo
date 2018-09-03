@@ -223,7 +223,7 @@ class RecordingFragmentManager: TimeStamped {
     }
     
     func exportCurrentRetention(_ destination: URL, _ completion: @escaping ((URL?, Error?) -> Void)){
-        guard let anImage = self.recordingFragments[0].image else {
+        guard let anImage = self.recordingFragments.first?.image else {
             completion(nil, fragmentRecorderError.couldNotExport)
             return
         }

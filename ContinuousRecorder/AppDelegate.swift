@@ -32,7 +32,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var recordingProgressView: NSView!
     var recordingProgressController: RecordingProgressController!
-
+    
+    // Starting up the main app
     override init () {
         do {
             recording = try ContinuousRecording()
@@ -44,7 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Quit if no recording (can only be done after completing init)
         if recording == nil { NSApplication.shared.terminate(self) }
         
-        // Set up subview
+        // Set up controller of subview
         recordingProgressController = RecordingProgressController(recording)
         recordingProgressController.savePanelOpened = {
             self.statusItem?.menu?.cancelTracking()
@@ -106,7 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func toggleExporting() {
         if recording.isExporting {
-            statusItem?.title = "Exporting.."
+            statusItem?.title = "Exporting"
         } else {
             statusItem?.title = ""
         }

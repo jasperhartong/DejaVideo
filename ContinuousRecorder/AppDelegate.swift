@@ -46,6 +46,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Set up subview
         recordingProgressController = RecordingProgressController(recording)
+        recordingProgressController.savePanelOpened = {
+            self.statusItem?.menu?.cancelTracking()
+        }
 
         // Set up observers
         observeRecording()

@@ -11,6 +11,34 @@ import Cocoa
 
 class RecordingProgressController: NSViewController {
     private let savePanel: NSSavePanel
+    var savePanelOpened: (() -> Void)?
+    private func configureSavePanel() {
+        savePanel.allowedFileTypes = ["mp4"]
+        savePanel.allowsOtherFileTypes = false
+        savePanel.level = .modalPanel
+        
+    }
+    private func openSavePanel () {
+        print("openSavePanel")
+        savePanelOpened?()
+        // TODO: Progress indicator not animating when opening the menu. Progress no longer shown
+        
+        // Make sure that savePanel is on top an in focus
+        NSApp.activate(ignoringOtherApps: true)
+
+        // open savePanel
+        savePanel.begin { (modalResponse) in
+            if modalResponse == .OK {
+                if let destination = self.savePanel.url {
+                    self.renderTo(destination: destination)
+                } else {
+                    print("Something went wrong")
+                }
+            }
+            // turn off focus
+            NSApp.activate(ignoringOtherApps: false)
+        }
+    }
 
     // Observing the ContinuousRecording
     @objc private let recording: ContinuousRecording
@@ -28,25 +56,18 @@ class RecordingProgressController: NSViewController {
     @IBOutlet weak var retentionProgress: NSProgressIndicator!
     @IBOutlet weak var exportButton: NSButton!
     @IBAction func buttonClicked(_ sender: NSButton) {
-        // Open savePanel
-        // TODO: Menu not loosing focus. SavePanel not always displayed on top
-        savePanel.begin { (modalResponse) in
-            if modalResponse == NSApplication.ModalResponse.OK {
-                if let destination = self.savePanel.url {
-                    self.renderTo(destination: destination)
-                } else {
-                    print("Something went wrong")
-                }
-            }
-        }
+        self.openSavePanel()
     }
     
     private func renderTo(destination: URL) {
         exportProgress.startAnimation(self)
-        
+        exportButton.isEnabled = false
+
         recording.renderCurrentRetention(destination, {(destination, error) -> Void in
             // We're done
             self.exportProgress.stopAnimation(self)
+            self.exportButton.isEnabled = true
+
             if let destination = destination {
                 print("\(destination)")
                 NSWorkspace.shared.open(destination)
@@ -65,7 +86,7 @@ class RecordingProgressController: NSViewController {
             if let button = exportButton {
                 let cell = button.cell! as! NSButtonCell
                 cell.backgroundColor = NSColor.red
-                cell.sound = NSSound(named: NSSound.Name("Morphy"))
+                // cell.sound = NSSound(named: NSSound.Name("Morphy"))
                 
             }
             progressTimer = Timer.scheduledTimer(
@@ -75,6 +96,7 @@ class RecordingProgressController: NSViewController {
                 selector: #selector(updateProgress),
                 userInfo: nil,
                 repeats: true)
+
             // Make sure it updates when the menu is open
             RunLoop.main.add(progressTimer, forMode: .commonModes)
         } else {
@@ -111,11 +133,9 @@ class RecordingProgressController: NSViewController {
     
     init(_ rec: ContinuousRecording) {
         recording = rec
-        // setup savePanel
         savePanel = NSSavePanel()
-        savePanel.allowedFileTypes = ["mp4"]
-        savePanel.allowsOtherFileTypes = false
         super.init(nibName: NSNib.Name(rawValue: "RecordingProgressView"), bundle: nil)
+        configureSavePanel()
         observeRecording()
     }
     

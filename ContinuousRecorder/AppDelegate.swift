@@ -59,6 +59,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.recording.observe(\ContinuousRecording.isRecording) { recording, observedChange in
                 self.updateMenuImage()
                 self.updateMenuItems()
+            },
+            self.recording.observe(\ContinuousRecording.isExporting) { recording, observedChange in
+                self.toggleExporting()
             }
         ]
     }
@@ -98,6 +101,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             statusItem?.image = imageRecordActive
         } else {
             statusItem?.image = imageRecordInactive
+        }
+    }
+    
+    private func toggleExporting() {
+        if recording.isExporting {
+            statusItem?.title = "Exporting.."
+        } else {
+            statusItem?.title = ""
         }
     }
     

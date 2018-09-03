@@ -198,6 +198,8 @@ class RecordingFragmentManager: TimeStamped {
 @objcMembers class ContinuousRecording: RecordingFragmentManager {
     let screenId: CGDirectDisplayID
     let config: ContinuousRecordingConfig
+
+    @objc dynamic var isExporting: Bool = false
     
     init(
         screenId: CGDirectDisplayID = CGMainDisplayID(),
@@ -220,11 +222,12 @@ class RecordingFragmentManager: TimeStamped {
         }
     }
     
-    func renderCurrentRetention(_ destination: URL, _ completion: @escaping ((URL?, Error?) -> Void)){
+    func exportCurrentRetention(_ destination: URL, _ completion: @escaping ((URL?, Error?) -> Void)){
         guard let anImage = self.recordingFragments[0].image else {
             completion(nil, fragmentRecorderError.couldNotExport)
             return
         }
+        isExporting = true
         
         // Make sure to trim at where we are now
         invalidateFragmentTimer()
@@ -251,6 +254,7 @@ class RecordingFragmentManager: TimeStamped {
             vidWriter.createMovieFrom(fragments: self.recordingFragments, completion: { (destination) in
                 self.clearAllFragments() // TODO: It shouldn't actually be cleared completely here, as the frames captured while exporting will then also be dropped
                 completion(destination, nil)
+                self.isExporting = false
                 NSLog("Exporting fragments: DONE ")
             })
         }

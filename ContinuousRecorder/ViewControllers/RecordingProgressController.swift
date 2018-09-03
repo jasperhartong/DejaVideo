@@ -19,7 +19,6 @@ class RecordingProgressController: NSViewController {
         
     }
     private func openSavePanel () {
-        print("openSavePanel")
         savePanelOpened?()
         // TODO: Progress indicator not animating when opening the menu. Progress no longer shown
         
@@ -47,6 +46,9 @@ class RecordingProgressController: NSViewController {
         observers = [
             self.recording.observe(\ContinuousRecording.isRecording) { recording, observedChange in
                 self.toggleProgressTimer()
+            },
+            self.recording.observe(\ContinuousRecording.isExporting) { recording, observedChange in
+                self.toggleExporting()
             }
         ]
     }
@@ -60,14 +62,8 @@ class RecordingProgressController: NSViewController {
     }
     
     private func renderTo(destination: URL) {
-        exportProgress.startAnimation(self)
-        exportButton.isEnabled = false
-
-        recording.renderCurrentRetention(destination, {(destination, error) -> Void in
+        recording.exportCurrentRetention(destination, {(destination, error) -> Void in
             // We're done
-            self.exportProgress.stopAnimation(self)
-            self.exportButton.isEnabled = true
-
             if let destination = destination {
                 print("\(destination)")
                 NSWorkspace.shared.open(destination)
@@ -78,7 +74,18 @@ class RecordingProgressController: NSViewController {
         })
     }
     
-    // Progress Timer
+    // Export indicator
+    private func toggleExporting() {
+        if recording.isExporting {
+            exportProgress.startAnimation(self)
+            exportButton.isEnabled = false
+        } else {
+            self.exportProgress.stopAnimation(self)
+            self.exportButton.isEnabled = true
+        }
+    }
+    
+    // Progress Timer & indicator
     private var progressTimer: Timer!
     
     private func toggleProgressTimer() {

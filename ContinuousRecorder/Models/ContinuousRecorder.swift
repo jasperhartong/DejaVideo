@@ -229,9 +229,6 @@ class RecordingFragmentManager: TimeStamped {
         }
         isExporting = true
         
-        // Make sure to trim at where we are now
-        invalidateFragmentTimer()
-        startFragmentTimer()
         
         NSLog("Exporting \(recordingFragments.count) fragments ")
 
@@ -241,6 +238,9 @@ class RecordingFragmentManager: TimeStamped {
                 codec: AVVideoCodecType.h264,
                 width: anImage.width,
                 height: anImage.height)
+            
+            // Always make sure that the exporting state is at least shown a second
+            sleep(1)
 
             // Note: Currently we always overwrite the destination by first deleting it
             // TODO: Add more error cases? Like when writing fails?

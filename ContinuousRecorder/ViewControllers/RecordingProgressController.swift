@@ -19,8 +19,7 @@ class RecordingProgressController: NSViewController {
     }
     private func openSavePanel () {
         savePanelOpened?()
-        // TODO: Progress indicator not animating when opening the menu. Progress no longer shown
-        
+
         // Make sure that savePanel is on top an in focus
         NSApp.activate(ignoringOtherApps: true)
 
@@ -81,6 +80,8 @@ class RecordingProgressController: NSViewController {
     
     // Export indicator
     private func updateExportIndicator() {
+        // BUG: First time opened, it's not spinning: https://stackoverflow.com/questions/38031137/how-to-program-a-delay-in-swift-3
+        exportProgress.usesThreadedAnimation = true
         if recording.isExporting {
             exportProgress.startAnimation(self)
             exportButton.isEnabled = false

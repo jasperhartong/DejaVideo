@@ -9,7 +9,7 @@
 import Foundation
 import Cocoa
 
-class RecordingProgressController: NSViewController {
+class RecordingProgressController: NSViewController, NSUserNotificationCenterDelegate {
     private let savePanel: NSSavePanel
     var savePanelOpened: (() -> Void)?
     private func configureSavePanel() {
@@ -68,14 +68,20 @@ class RecordingProgressController: NSViewController {
             }
             if let error = error {
                 print("\(error)")
-                let alert = NSAlert()
-                alert.messageText = "Export Error"
-                alert.informativeText = "Something went wrong during export, please try again."
-                alert.alertStyle = .critical
-                alert.addButton(withTitle: "OK")
-                alert.runModal() // blocking
+                let notification = NSUserNotification()
+                notification.title = "Export Error"
+                notification.informativeText = "Something went wrong during export, please try again."
+                notification.soundName = nil
+                NSUserNotificationCenter.default.delegate = self
+                NSUserNotificationCenter.default.deliver(notification)
             }
         })
+    }
+    
+    // TODO: Make me an extension with NSUserNotificationCenterDelegate
+    func userNotificationCenter(_ center: NSUserNotificationCenter,
+                                shouldPresent notification: NSUserNotification) -> Bool {
+        return true
     }
     
     // Export indicator

@@ -21,7 +21,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: "")
     private let itemStop: NSMenuItem = NSMenuItem(
         title: "Stop Recording", action: #selector(AppDelegate.stop), keyEquivalent: "")
-    private let itemQuitSeparator: NSMenuItem = NSMenuItem.separator()
+    private let itemMenuSeparator: NSMenuItem = NSMenuItem.separator()
+    private let itemSettings: NSMenuItem = NSMenuItem(
+        title: "Settings", action: #selector(AppDelegate.settings), keyEquivalent: "")
     private let itemQuit: NSMenuItem = NSMenuItem(
         title: "Quit", action: #selector(AppDelegate.quit), keyEquivalent: "")
     
@@ -29,9 +31,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let imageRecordActive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRec"))!
     private let imageRecordInactive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRecInactive"))!
     //    private let progressTimer: Timer // TODO: Add timer to update for progress
-
-    @IBOutlet weak var recordingProgressView: NSView!
+    
+    // Embedded recording progress view
     var recordingProgressController: RecordingProgressController!
+    
+    // Settings View Window
+    var settingsWindowController: SettingsWindowController!
     
     // Starting up the main app
     override init () {
@@ -45,11 +50,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Quit if no recording (can only be done after completing init)
         if recording == nil { NSApplication.shared.terminate(self) }
         
-        // Set up controller of subview
+        // Set up controllers of (sub) views
         recordingProgressController = RecordingProgressController(recording)
         recordingProgressController.savePanelOpened = {
             self.statusItem?.menu?.cancelTracking()
         }
+        settingsWindowController = SettingsWindowController()
 
         // Set up observers
         observeRecording()
@@ -74,7 +80,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             itemProgress,
             itemStart,
             itemStop,
-            itemQuitSeparator,
+            itemMenuSeparator,
+            itemSettings,
             itemQuit
         ] {
             menu.addItem(menuItem)
@@ -133,6 +140,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func stop() {
         recording.stop(clearFragments: true)
+    }
+    
+    @objc func settings() {
+        settingsWindowController.window?.setIsVisible(true)
     }
     
     @objc func quit() {

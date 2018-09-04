@@ -17,6 +17,8 @@
 		A4C0F20021393A4E00BF2215 /* Morphy.wav in Resources */ = {isa = PBXBuildFile; fileRef = A4C0F1FF21393A4D00BF2215 /* Morphy.wav */; };
 		A4CD54D6213ABC7400F191E2 /* CGContext+protectGState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CD54D5213ABC7400F191E2 /* CGContext+protectGState.swift */; };
 		A4CD54D8213ACE3400F191E2 /* NSpoint+flipped.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CD54D7213ACE3400F191E2 /* NSpoint+flipped.swift */; };
+		A4CD54DB213E66F000F191E2 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CD54DA213E66F000F191E2 /* SettingsWindowController.swift */; };
+		A4CD54DD213E672E00F191E2 /* SettingsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4CD54DC213E672E00F191E2 /* SettingsWindow.xib */; };
 		A4F09C1421370B740062753D /* VidWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F09C1321370B740062753D /* VidWriter.swift */; };
 		A4F09C1621370D370062753D /* RepeatingBackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F09C1521370D370062753D /* RepeatingBackgroundTimer.swift */; };
 /* End PBXBuildFile section */
@@ -47,6 +49,8 @@
 		A4C0F1FF21393A4D00BF2215 /* Morphy.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Morphy.wav; sourceTree = "<group>"; };
 		A4CD54D5213ABC7400F191E2 /* CGContext+protectGState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGContext+protectGState.swift"; sourceTree = "<group>"; };
 		A4CD54D7213ACE3400F191E2 /* NSpoint+flipped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSpoint+flipped.swift"; sourceTree = "<group>"; };
+		A4CD54DA213E66F000F191E2 /* SettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowController.swift; sourceTree = "<group>"; };
+		A4CD54DC213E672E00F191E2 /* SettingsWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsWindow.xib; sourceTree = "<group>"; };
 		A4F09C1321370B740062753D /* VidWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VidWriter.swift; sourceTree = "<group>"; };
 		A4F09C1521370D370062753D /* RepeatingBackgroundTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatingBackgroundTimer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -98,6 +102,7 @@
 				A42709CF21305DEF000BF7C3 /* Assets.xcassets */,
 				A4C0F1FE21393A4D00BF2215 /* SoundEffects */,
 				A42709D121305DEF000BF7C3 /* MainMenu.xib */,
+				A4CD54DC213E672E00F191E2 /* SettingsWindow.xib */,
 				A4C0F1FA21381BCE00BF2215 /* RecordingProgressView.xib */,
 				A42709D421305DEF000BF7C3 /* Info.plist */,
 				A42709D521305DEF000BF7C3 /* ContinuousRecorder.entitlements */,
@@ -143,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				A4C0F1FC21381D1700BF2215 /* RecordingProgressController.swift */,
+				A4CD54DA213E66F000F191E2 /* SettingsWindowController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -243,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A42709D021305DEF000BF7C3 /* Assets.xcassets in Resources */,
+				A4CD54DD213E672E00F191E2 /* SettingsWindow.xib in Resources */,
 				A4C0F20021393A4E00BF2215 /* Morphy.wav in Resources */,
 				A42709D321305DEF000BF7C3 /* MainMenu.xib in Resources */,
 				A4C0F1FB21381BCE00BF2215 /* RecordingProgressView.xib in Resources */,
@@ -270,6 +277,7 @@
 				A4C0F1FD21381D1700BF2215 /* RecordingProgressController.swift in Sources */,
 				A4CD54D6213ABC7400F191E2 /* CGContext+protectGState.swift in Sources */,
 				A42709CE21305DEE000BF7C3 /* AppDelegate.swift in Sources */,
+				A4CD54DB213E66F000F191E2 /* SettingsWindowController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

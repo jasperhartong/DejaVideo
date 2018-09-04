@@ -144,6 +144,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func settings() {
         settingsWindowController.window?.setIsVisible(true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            // Delay ensures correct becomeMain() behavior when the settingswindow was already opened before
+            // Gives time for the menu to close and pass on "Main" to the already opened window
+            // Otherwise the settingsWindow would becomeMain only for a split second
+            self.settingsWindowController.window?.becomeMain()
+        }
     }
     
     @objc func quit() {

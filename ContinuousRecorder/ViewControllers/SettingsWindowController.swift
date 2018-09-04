@@ -45,6 +45,7 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSToolbarD
         self.window?.toolbar?.delegate = self
         self.window?.toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "General")
         // ensure the settings window is on top
+        self.window?.level = .floating
         NSApp.activate(ignoringOtherApps: true)
     }
     

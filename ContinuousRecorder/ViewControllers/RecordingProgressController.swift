@@ -17,6 +17,17 @@ class RecordingProgressController: NSViewController {
     @IBAction func buttonClicked(_ sender: NSButton) {
         self.openSavePanel()
     }
+    @IBOutlet weak var recordingButton: NSButton!
+    @IBAction func recordingButtonClicked(_ sender: Any) {
+        if self.recording.isExporting {
+            return
+        }
+        if self.recording.isRecording {
+            self.recording.stop(clearFragments: true)
+        } else {
+            self.recording.start()
+        }
+    }
     
     // MARK: SavePanel
     private let savePanel: NSSavePanel
@@ -53,9 +64,11 @@ class RecordingProgressController: NSViewController {
         observers = [
             self.recording.observe(\ContinuousRecording.isRecording) { recording, observedChange in
                 self.toggleProgressTimer()
+                self.updateRecordingButton()
             },
             self.recording.observe(\ContinuousRecording.isExporting) { recording, observedChange in
                 self.updateExportIndicator()
+                self.updateRecordingButton()
             }
         ]
     }
@@ -84,6 +97,21 @@ class RecordingProgressController: NSViewController {
         } else {
             self.exportProgress.stopAnimation(self)
             self.exportButton.isEnabled = true
+        }
+    }
+    
+    private func updateRecordingButton() {
+        if self.recording.isExporting {
+            recordingButton.isEnabled = false
+            recordingButton.title = "Exporting.."
+            return
+        } else {
+            recordingButton.isEnabled = true
+            if self.recording.isRecording {
+                recordingButton.title = "Stop Recording"
+            } else {
+                recordingButton.title = "Start Recording"
+            }
         }
     }
     
@@ -144,6 +172,7 @@ class RecordingProgressController: NSViewController {
         // Doubledowns on ensuring that the indicator states are always correct
         updateExportIndicator()
         updateProgressIndicator()
+        updateRecordingButton()
     }
     
     init(_ rec: ContinuousRecording) {

@@ -17,10 +17,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // menu items
     private let itemProgress: NSMenuItem = NSMenuItem()
-    private let itemStart: NSMenuItem = NSMenuItem(
-        title: "Start Recording", action: #selector(AppDelegate.start), keyEquivalent: "")
-    private let itemStop: NSMenuItem = NSMenuItem(
-        title: "Stop Recording", action: #selector(AppDelegate.stop), keyEquivalent: "")
     private let itemMenuSeparator: NSMenuItem = NSMenuItem.separator()
     private let itemSettings: NSMenuItem = NSMenuItem(
         title: "Settings", action: #selector(AppDelegate.settings), keyEquivalent: "")
@@ -56,6 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusItem?.menu?.cancelTracking()
         }
         settingsWindowController = SettingsWindowController()
+        itemProgress.view = recordingProgressController.view
 
         // Set up observers
         observeRecording()
@@ -65,7 +62,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         observers = [
             self.recording.observe(\ContinuousRecording.isRecording) { recording, observedChange in
                 self.updateMenuImage()
-                self.updateMenuItems()
             },
             self.recording.observe(\ContinuousRecording.isExporting) { recording, observedChange in
                 self.toggleExporting()
@@ -78,8 +74,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         for menuItem in [
             itemProgress,
-            itemStart,
-            itemStop,
             itemMenuSeparator,
             itemSettings,
             itemQuit
@@ -87,21 +81,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(menuItem)
         }
         statusItem?.menu = menu
-        updateMenuItems()
-    }
-    
-    private func updateMenuItems () {
-        if (recording.isRecording) {
-            itemProgress.view = recordingProgressController.view
-            itemProgress.isHidden = false
-            itemStop.isHidden = false
-            itemStart.isHidden = true
-        } else {
-            itemProgress.view = nil
-            itemProgress.isHidden = true
-            itemStop.isHidden = true
-            itemStart.isHidden = false
-        }
     }
     
     private func updateMenuImage() {

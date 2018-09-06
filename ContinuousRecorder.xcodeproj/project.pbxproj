@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A4207D52213EDCAB008EB66F /* RecordingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4207D51213EDCAB008EB66F /* RecordingButton.swift */; };
 		A42709CE21305DEE000BF7C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709CD21305DEE000BF7C3 /* AppDelegate.swift */; };
 		A42709D021305DEF000BF7C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A42709CF21305DEF000BF7C3 /* Assets.xcassets */; };
 		A42709D321305DEF000BF7C3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A42709D121305DEF000BF7C3 /* MainMenu.xib */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A4207D51213EDCAB008EB66F /* RecordingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingButton.swift; sourceTree = "<group>"; };
 		A42709CA21305DEE000BF7C3 /* ContinuousRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContinuousRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A42709CD21305DEE000BF7C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A42709CF21305DEF000BF7C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -73,6 +75,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A4207D50213EDC90008EB66F /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A4207D51213EDCAB008EB66F /* RecordingButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		A42709C121305DEE000BF7C3 = {
 			isa = PBXGroup;
 			children = (
@@ -94,6 +104,7 @@
 		A42709CC21305DEE000BF7C3 /* ContinuousRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				A4207D50213EDC90008EB66F /* Components */,
 				A4CD54D9213ADE7500F191E2 /* ViewControllers */,
 				A4CD54D4213ABC2400F191E2 /* Extensions */,
 				A4F09C1221370B610062753D /* Utils */,
@@ -274,6 +285,7 @@
 				A4F09C1621370D370062753D /* RepeatingBackgroundTimer.swift in Sources */,
 				A4CD54D8213ACE3400F191E2 /* NSpoint+flipped.swift in Sources */,
 				A4F09C1421370B740062753D /* VidWriter.swift in Sources */,
+				A4207D52213EDCAB008EB66F /* RecordingButton.swift in Sources */,
 				A4C0F1FD21381D1700BF2215 /* RecordingProgressController.swift in Sources */,
 				A4CD54D6213ABC7400F191E2 /* CGContext+protectGState.swift in Sources */,
 				A42709CE21305DEE000BF7C3 /* AppDelegate.swift in Sources */,

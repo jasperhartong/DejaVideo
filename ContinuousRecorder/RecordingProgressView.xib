@@ -48,22 +48,22 @@
                                 <action selector="buttonClicked:" target="-2" id="dGM-RD-XkD"/>
                             </connections>
                         </button>
-                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="94F-hb-7RS">
-                            <rect key="frame" x="56" y="12" width="98" height="14"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="inline" title="Start Recording" bezelStyle="inline" alignment="center" inset="2" id="GZs-iI-g49">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="smallSystem"/>
-                            </buttonCell>
-                            <connections>
-                                <action selector="recordingButtonClicked:" target="-2" id="yo4-uC-DaX"/>
-                            </connections>
-                        </button>
                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zXe-rd-HYF">
                             <rect key="frame" x="8" y="28" width="194" height="48"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="deja-video-400w" id="6A3-MM-ZgB"/>
                         </imageView>
+                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="94F-hb-7RS">
+                            <rect key="frame" x="47" y="9" width="116" height="19"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="roundRect" title="Start Recording" bezelStyle="roundedRect" alignment="center" borderStyle="border" inset="2" id="GZs-iI-g49">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="cellTitle"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="recordingButtonClicked:" target="-2" id="yo4-uC-DaX"/>
+                            </connections>
+                        </button>
                     </subviews>
                 </view>
             </subviews>

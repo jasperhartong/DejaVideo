@@ -23,7 +23,7 @@
                     <rect key="frame" x="8" y="0.0" width="210" height="94"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
-                        <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hBZ-5d-DDk" customClass="RecordingButton" customModule="ContinuousRecorder" customModuleProvider="target">
+                        <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hBZ-5d-DDk" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
                             <rect key="frame" x="8" y="42" width="194" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="bevel" title="Export last second" bezelStyle="rounded" image="export-button-icon-28h" imagePosition="leading" alignment="center" imageScaling="proportionallyDown" inset="2" id="Fj5-Yw-tS2">
@@ -53,13 +53,24 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="deja-video-400w" id="6A3-MM-ZgB"/>
                         </imageView>
-                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="94F-hb-7RS">
+                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="94F-hb-7RS" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
                             <rect key="frame" x="47" y="11" width="116" height="19"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundRect" title="Start Recording" bezelStyle="roundedRect" alignment="center" borderStyle="border" inset="2" id="GZs-iI-g49">
+                            <buttonCell key="cell" type="roundRect" title="Start Recording" bezelStyle="roundedRect" alignment="center" inset="2" id="GZs-iI-g49">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="cellTitle"/>
                             </buttonCell>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                                    <color key="value" red="0.25098039215686274" green="0.25098039215686274" blue="0.25098039215686274" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                    <color key="value" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="textColorSelected">
+                                    <color key="value" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="recordingButtonClicked:" target="-2" id="yo4-uC-DaX"/>
                             </connections>

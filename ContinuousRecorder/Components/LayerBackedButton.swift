@@ -1,6 +1,6 @@
 //
 //  RecordingButton.swift
-//  ContinuousRecorder
+//  LayerBackedButton
 //
 //  Created by Jasper Hartong on 04/09/2018.
 //  Copyright © 2018 Jasper Hartong. All rights reserved.
@@ -10,10 +10,7 @@ import Foundation
 import AppKit
 
 @IBDesignable
-class RecordingButton: NSButton {
-    
-    @IBInspectable
-    var cornerRadius: CGFloat = 0.0 { didSet { updateLayer() } }
+class LayerBackedButton: NSButton {
     
     @IBInspectable
     var backgroundColor: NSColor = NSColor.controlColor { didSet { updateLayer() } }
@@ -45,6 +42,10 @@ class RecordingButton: NSButton {
         }
         updateTitleAttributes()
         super.updateLayer()
+    }
+    
+    private var cornerRadius: CGFloat {
+        return bounds.height / 2
     }
     
     private func layerMask() -> CAShapeLayer {

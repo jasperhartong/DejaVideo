@@ -9,7 +9,7 @@
 import Foundation
 import Cocoa
 
-class RecordingProgressController: NSViewController, NSUserNotificationCenterDelegate {
+class RecordingProgressController: NSViewController {
     private let savePanel: NSSavePanel
     var savePanelOpened: (() -> Void)?
     private func configureSavePanel() {
@@ -68,20 +68,9 @@ class RecordingProgressController: NSViewController, NSUserNotificationCenterDel
             }
             if let error = error {
                 print("\(error)")
-                let notification = NSUserNotification()
-                notification.title = "Export Error"
-                notification.informativeText = "Something went wrong during export, please try again."
-                notification.soundName = nil
-                NSUserNotificationCenter.default.delegate = self
-                NSUserNotificationCenter.default.deliver(notification)
+                self.presentNotification("Export Error", "Something went wrong during export, please try again.")
             }
         })
-    }
-    
-    // TODO: Make me an extension with NSUserNotificationCenterDelegate
-    func userNotificationCenter(_ center: NSUserNotificationCenter,
-                                shouldPresent notification: NSUserNotification) -> Bool {
-        return true
     }
     
     // Export indicator
@@ -174,4 +163,21 @@ class RecordingProgressController: NSViewController, NSUserNotificationCenterDel
         fatalError("init(coder:) has not been implemented")
     }
     
+}
+
+extension RecordingProgressController: NSUserNotificationCenterDelegate {
+    func presentNotification(_ title: String, _ informativeText: String) {
+        let notification = NSUserNotification()
+        notification.title = title
+        notification.informativeText = informativeText
+        notification.soundName = nil
+        NSUserNotificationCenter.default.delegate = self
+        NSUserNotificationCenter.default.deliver(notification)
+    }
+    
+    // ensure the notification is shown at the top right of the screen and not only in the notifications center
+    func userNotificationCenter(_ center: NSUserNotificationCenter,
+                                shouldPresent notification: NSUserNotification) -> Bool {
+        return true
+    }
 }

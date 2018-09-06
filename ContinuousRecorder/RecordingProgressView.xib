@@ -30,25 +30,10 @@
                         <progressIndicator wantsLayer="YES" fixedFrame="YES" alphaValue="0.20000000000000001" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="ZfY-d3-OG3">
                             <rect key="frame" x="27" y="0.0" width="161" height="20"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <contentFilters>
-                                <ciFilter name="CIAffineTransform">
-                                    <configuration>
-                                        <null key="inputImage"/>
-                                        <affineTransform key="inputTransform" m11="1" m12="0.0" m21="0.0" m22="1" tX="0.0" tY="0.0"/>
-                                    </configuration>
-                                </ciFilter>
-                            </contentFilters>
                         </progressIndicator>
                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="veO-bN-dja">
                             <rect key="frame" x="13" y="6" width="184" height="41"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <contentFilters>
-                                <ciFilter name="CIPhotoEffectTonal">
-                                    <configuration>
-                                        <null key="inputImage"/>
-                                    </configuration>
-                                </ciFilter>
-                            </contentFilters>
                             <buttonCell key="cell" type="square" title="Export last minute" bezelStyle="shadowlessSquare" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="2WK-6c-pMY">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>

@@ -10,6 +10,15 @@ import Foundation
 import Cocoa
 
 class RecordingProgressController: NSViewController {
+    // MARK: Outlets
+    @IBOutlet weak var exportProgress: NSProgressIndicator!
+    @IBOutlet weak var retentionProgress: NSProgressIndicator!
+    @IBOutlet weak var exportButton: NSButton!
+    @IBAction func buttonClicked(_ sender: NSButton) {
+        self.openSavePanel()
+    }
+    
+    // MARK: SavePanel
     private let savePanel: NSSavePanel
     var savePanelOpened: (() -> Void)?
     private func configureSavePanel() {
@@ -19,10 +28,10 @@ class RecordingProgressController: NSViewController {
     }
     private func openSavePanel () {
         savePanelOpened?()
-
+        
         // Make sure that savePanel is on top an in focus
         NSApp.activate(ignoringOtherApps: true)
-
+        
         // open savePanel
         savePanel.begin { (modalResponse) in
             if modalResponse == .OK {
@@ -36,8 +45,8 @@ class RecordingProgressController: NSViewController {
             NSApp.activate(ignoringOtherApps: false)
         }
     }
-
-    // Observing the ContinuousRecording
+    
+    // MARK: Observing the ContinuousRecording
     @objc private let recording: ContinuousRecording
     private var observers = [NSKeyValueObservation]()
     private func observeRecording() {
@@ -49,14 +58,6 @@ class RecordingProgressController: NSViewController {
                 self.updateExportIndicator()
             }
         ]
-    }
-    
-    // Outlets
-    @IBOutlet weak var exportProgress: NSProgressIndicator!
-    @IBOutlet weak var retentionProgress: NSProgressIndicator!
-    @IBOutlet weak var exportButton: NSButton!
-    @IBAction func buttonClicked(_ sender: NSButton) {
-        self.openSavePanel()
     }
     
     private func renderTo(destination: URL) {

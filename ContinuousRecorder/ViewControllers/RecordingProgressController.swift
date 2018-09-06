@@ -11,21 +11,20 @@ import Cocoa
 
 class RecordingProgressController: NSViewController {
     // MARK: Outlets
-    @IBOutlet weak var exportProgress: NSProgressIndicator!
-    @IBOutlet weak var retentionProgress: NSProgressIndicator!
+    @IBOutlet weak var logoImage: NSImageView!
     @IBOutlet weak var exportButton: NSButton!
     @IBAction func buttonClicked(_ sender: NSButton) {
         self.openSavePanel()
     }
     @IBOutlet weak var recordingButton: NSButton!
     @IBAction func recordingButtonClicked(_ sender: Any) {
-        if self.recording.isExporting {
-            return
-        }
-        if self.recording.isRecording {
-            self.recording.stop(clearFragments: true)
-        } else {
+        switch recording.state {
+        case .idle:
             self.recording.start()
+        case .recording:
+            self.recording.stop(clearFragments: true)
+        case .recordingExporting:
+            break
         }
     }
     
@@ -62,13 +61,9 @@ class RecordingProgressController: NSViewController {
     private var observers = [NSKeyValueObservation]()
     private func observeRecording() {
         observers = [
-            self.recording.observe(\ContinuousRecording.isRecording) { recording, observedChange in
-                self.toggleProgressTimer()
+            self.recording.observe(\ContinuousRecording.state) { recording, observedChange in
                 self.updateRecordingButton()
-            },
-            self.recording.observe(\ContinuousRecording.isExporting) { recording, observedChange in
-                self.updateExportIndicator()
-                self.updateRecordingButton()
+                self.updateExportButton()
             }
         ]
     }
@@ -87,66 +82,72 @@ class RecordingProgressController: NSViewController {
         })
     }
     
-    // Export indicator
-    private func updateExportIndicator() {
-        // BUG: First time opened, it's not spinning: https://stackoverflow.com/questions/38031137/how-to-program-a-delay-in-swift-3
-        exportProgress.usesThreadedAnimation = true
-        if recording.isExporting {
-            exportProgress.startAnimation(self)
-            exportButton.isEnabled = false
-        } else {
-            self.exportProgress.stopAnimation(self)
-            self.exportButton.isEnabled = true
-        }
-    }
+//    // Export indicator
+//    private func updateExportIndicator() {
+//        // BUG: First time opened, it's not spinning: https://stackoverflow.com/questions/38031137/how-to-program-a-delay-in-swift-3
+//        exportProgress.usesThreadedAnimation = true
+//        if recording.isExporting {
+//            exportProgress.startAnimation(self)
+//            exportButton.isEnabled = false
+//        } else {
+//            self.exportProgress.stopAnimation(self)
+//            self.exportButton.isEnabled = true
+//        }
+//    }
     
+    // MARK: recordingButton
     private func updateRecordingButton() {
-        if self.recording.isExporting {
+        switch recording.state {
+        case .idle:
+            recordingButton.isEnabled = true
+            recordingButton.title = "Start Recording"
+        case .recording:
+            recordingButton.isEnabled = true
+            recordingButton.title = "Stop Recording"
+        case .recordingExporting:
             recordingButton.isEnabled = false
             recordingButton.title = "Exporting.."
-            return
-        } else {
-            recordingButton.isEnabled = true
-            if self.recording.isRecording {
-                recordingButton.title = "Stop Recording"
-            } else {
-                recordingButton.title = "Start Recording"
-            }
         }
     }
     
-    // Progress Timer & indicator
-    private var progressTimer: Timer!
-    
-    private func toggleProgressTimer() {
-        if recording.isRecording {
-            if let button = exportButton {
-                let cell = button.cell! as! NSButtonCell
-                cell.backgroundColor = NSColor.red
-                // cell.sound = NSSound(named: NSSound.Name("Morphy"))
-                
+    // MARK: exportButton
+    private func updateExportButton() {
+        switch recording.state {
+        case .idle:
+            logoImage.isHidden = false
+            exportButton.isHidden = true
+            exportButton.isEnabled = true
+            if let timer = exportButtonTextTimer {
+                timer.invalidate()
             }
-            progressTimer = Timer.scheduledTimer(
-                // set up an update timer that is similar to how often we record
+
+        case .recording:
+            logoImage.isHidden = true
+            exportButton.isHidden = false
+            exportButton.isEnabled = true
+            updateExportButtonText()
+            exportButtonTextTimer = Timer.scheduledTimer(
                 timeInterval: recording.config.fragmentInterval,
                 target: self,
-                selector: #selector(updateProgressIndicator),
+                selector: #selector(updateExportButtonText),
                 userInfo: nil,
                 repeats: true)
-
+            
             // Make sure it updates when the menu is open
-            RunLoop.main.add(progressTimer, forMode: .commonModes)
-        } else {
-            progressTimer.invalidate()
-        }
+            RunLoop.main.add(exportButtonTextTimer, forMode: .commonModes)
 
+        case .recordingExporting:
+            logoImage.isHidden = true
+            exportButton.isHidden = false
+            exportButton.isEnabled = false
+        }
     }
     
-    @objc private func updateProgressIndicator() {
+    private var exportButtonTextTimer: Timer!
+    
+    @objc private func updateExportButtonText() {
         let fragmentCount: Double = Double(recording.recordingFragments.count)
         let fragmentInterval: Double = Double(recording.config.fragmentInterval)
-        let retention: Double = Double(recording.config.retention)
-        let maxFragmentCount: Double = retention / fragmentInterval
         let exportableSeconds: Int = Int(fragmentCount * fragmentInterval)
         var readableTime = "\(exportableSeconds) seconds"
         if exportableSeconds == 1 {
@@ -156,22 +157,14 @@ class RecordingProgressController: NSViewController {
         } else if exportableSeconds >= 60 {
             readableTime = "minute"
         }
-        
-        // update retentionProgress
-        retentionProgress.isHidden = false
-        retentionProgress.maxValue = maxFragmentCount
-        retentionProgress.doubleValue = fragmentCount
-        if fragmentCount >= maxFragmentCount {
-            retentionProgress.isHidden = true
-        }
+
         // update exportButton
         exportButton.title = "Export last \(readableTime)"
     }
     
     override func viewDidLayout() {
         // Doubledowns on ensuring that the indicator states are always correct
-        updateExportIndicator()
-        updateProgressIndicator()
+        updateExportButton()
         updateRecordingButton()
     }
     
@@ -186,7 +179,7 @@ class RecordingProgressController: NSViewController {
     }
     
     deinit {
-        progressTimer.invalidate()
+        exportButtonTextTimer.invalidate()
     }
     
     required init?(coder: NSCoder) {

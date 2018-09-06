@@ -181,25 +181,19 @@ class RecordingFragmentManager: TimeStamped {
     
 }
 
-//enum RecordingState {
-//    case initialized
-//    case starting
-//    case started
-//    case stopping
-//    case stopped
-//}
-//
-//enum ExportState {
-//    case Exporting
-//    case error
-//    case idle
-//}
+@objc
+enum RecordingState: Int {
+    case idle
+    case recording
+    case recordingExporting  // you can only export while recording
+}
+
 
 @objcMembers class ContinuousRecording: RecordingFragmentManager {
     let screenId: CGDirectDisplayID
     let config: ContinuousRecordingConfig
 
-    @objc dynamic var isExporting: Bool = false
+    @objc dynamic var state: RecordingState = .idle
     
     init(
         screenId: CGDirectDisplayID = CGMainDisplayID(),
@@ -212,6 +206,7 @@ class RecordingFragmentManager: TimeStamped {
     
     func start() {
         startFragmentTimer()
+        state = .recording
     }
 
     func stop(clearFragments: Bool = false) {
@@ -220,14 +215,19 @@ class RecordingFragmentManager: TimeStamped {
         if clearFragments {
             clearAllFragments()
         }
+        state = .idle
     }
     
     func exportCurrentRetention(_ destination: URL, _ completion: @escaping ((URL?, Error?) -> Void)){
+        if state != .recording {
+            completion(nil, fragmentRecorderError.couldNotExport)
+            return
+        }
         guard let anImage = self.recordingFragments.first?.image else {
             completion(nil, fragmentRecorderError.couldNotExport)
             return
         }
-        isExporting = true
+        state = .recordingExporting
         
         
         NSLog("Exporting \(recordingFragments.count) fragments ")
@@ -252,9 +252,9 @@ class RecordingFragmentManager: TimeStamped {
             vidWriter.applyTimeWith(duration: Float(self.config.fragmentInterval), frameNumber: self.recordingFragments.count)
             
             vidWriter.createMovieFrom(fragments: self.recordingFragments, completion: { (destination) in
+                self.state = .recording
                 self.clearAllFragments() // TODO: It shouldn't actually be cleared completely here, as the frames captured while exporting will then also be dropped
                 completion(destination, nil)
-                self.isExporting = false
                 NSLog("Exporting fragments: DONE ")
             })
         }

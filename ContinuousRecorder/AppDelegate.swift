@@ -60,11 +60,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func observeRecording() {
         observers = [
-            self.recording.observe(\ContinuousRecording.isRecording) { recording, observedChange in
+            self.recording.observe(\ContinuousRecording.state) { recording, observedChange in
                 self.updateMenuImage()
-            },
-            self.recording.observe(\ContinuousRecording.isExporting) { recording, observedChange in
-                self.toggleExporting()
+                self.updateMenuTitle()
             }
         ]
     }
@@ -84,18 +82,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     private func updateMenuImage() {
-        if recording.isRecording {
-            statusItem?.image = imageRecordActive
-        } else {
+        switch recording.state {
+        case .idle:
             statusItem?.image = imageRecordInactive
+        case .recording:
+            statusItem?.image = imageRecordActive
+        case .recordingExporting:
+            // TODO: Add separate image for exporting
+            statusItem?.image = imageRecordActive
         }
     }
     
-    private func toggleExporting() {
-        if recording.isExporting {
-            statusItem?.title = "Exporting"
-        } else {
+    private func updateMenuTitle() {
+        switch recording.state {
+        case .idle, .recording:
             statusItem?.title = ""
+        case .recordingExporting:
+            statusItem?.title = "Exporting"
         }
     }
     

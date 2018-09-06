@@ -24,8 +24,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         title: "Quit", action: #selector(AppDelegate.quit), keyEquivalent: "")
     
     // Menu images
-    private let imageRecordActive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRec"))!
-    private let imageRecordInactive: NSImage = NSImage(named: NSImage.Name(rawValue: "MenuRecInactive"))!
+    private let menuImageIdle: NSImage = NSImage(named: NSImage.Name(rawValue: "menu-image-idle"))!
+    private let menuImageRecording: NSImage = NSImage(named: NSImage.Name(rawValue: "menu-image-recording"))!
+    private let menuImageExporting: NSImage = NSImage(named: NSImage.Name(rawValue: "menu-image-exporting"))!
     //    private let progressTimer: Timer // TODO: Add timer to update for progress
     
     // Embedded recording progress view
@@ -62,7 +63,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         observers = [
             self.recording.observe(\ContinuousRecording.state) { recording, observedChange in
                 self.updateMenuImage()
-                self.updateMenuTitle()
             }
         ]
     }
@@ -84,21 +84,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func updateMenuImage() {
         switch recording.state {
         case .idle:
-            statusItem?.image = imageRecordInactive
+            statusItem?.image = menuImageIdle
         case .recording:
-            statusItem?.image = imageRecordActive
+            statusItem?.image = menuImageRecording
         case .recordingExporting:
-            // TODO: Add separate image for exporting
-            statusItem?.image = imageRecordActive
-        }
-    }
-    
-    private func updateMenuTitle() {
-        switch recording.state {
-        case .idle, .recording:
-            statusItem?.title = ""
-        case .recordingExporting:
-            statusItem?.title = "Exporting"
+            // TODO: Add animation
+            statusItem?.image = menuImageExporting
         }
     }
     

@@ -11,7 +11,7 @@ import Cocoa
 
 class RecordingProgressController: NSViewController {
     // MARK: Outlets
-    @IBOutlet weak var logoImage: NSImageView!
+    @IBOutlet weak var image: NSImageView!
     @IBOutlet weak var exportButton: NSButton!
     @IBAction func buttonClicked(_ sender: NSButton) {
         self.openSavePanel()
@@ -27,6 +27,9 @@ class RecordingProgressController: NSViewController {
             break
         }
     }
+    
+    private let imageExporting: NSImage = NSImage(named: NSImage.Name(rawValue: "exporting-indicator-400w"))!
+    private let imageLogo: NSImage = NSImage(named: NSImage.Name(rawValue: "deja-video-400w"))!
     
     // MARK: SavePanel
     private let savePanel: NSSavePanel
@@ -114,15 +117,15 @@ class RecordingProgressController: NSViewController {
     private func updateExportButton() {
         switch recording.state {
         case .idle:
-            logoImage.isHidden = false
+            image.image = imageLogo
+            image.isHidden = false
             exportButton.isHidden = true
-            exportButton.isEnabled = true
             if let timer = exportButtonTextTimer {
                 timer.invalidate()
             }
 
         case .recording:
-            logoImage.isHidden = true
+            image.isHidden = true
             exportButton.isHidden = false
             exportButton.isEnabled = true
             updateExportButtonText()
@@ -137,9 +140,10 @@ class RecordingProgressController: NSViewController {
             RunLoop.main.add(exportButtonTextTimer, forMode: .commonModes)
 
         case .recordingExporting:
-            logoImage.isHidden = true
-            exportButton.isHidden = false
-            exportButton.isEnabled = false
+            // TODO: Let image animate while exporting
+            image.image = imageExporting
+            image.isHidden = false
+            exportButton.isHidden = true
         }
     }
     

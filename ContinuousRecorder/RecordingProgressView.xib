@@ -8,7 +8,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="RecordingProgressController" customModule="ContinuousRecorder" customModuleProvider="target">
             <connections>
                 <outlet property="exportButton" destination="hBZ-5d-DDk" id="q3H-Ca-B1m"/>
-                <outlet property="logoImage" destination="zXe-rd-HYF" id="1oh-fp-cNf"/>
+                <outlet property="image" destination="zXe-rd-HYF" id="1oh-fp-cNf"/>
                 <outlet property="recordingButton" destination="94F-hb-7RS" id="1KJ-uD-Xex"/>
                 <outlet property="view" destination="c22-O7-iKe" id="S8r-wx-ECn"/>
             </connections>
@@ -67,7 +67,7 @@
                     </subviews>
                 </view>
             </subviews>
-            <point key="canvasLocation" x="22" y="80"/>
+            <point key="canvasLocation" x="48" y="67"/>
         </customView>
     </objects>
     <resources>

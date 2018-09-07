@@ -32,9 +32,9 @@ class LayerBackedButton: NSButton {
         return true
     }
     
-    override var alignmentRectInsets: NSEdgeInsets {
-        return NSEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
-    }
+//    override var alignmentRectInsets: NSEdgeInsets {
+//        return NSEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+//    }
     override var wantsDefaultClipping: Bool {
         return false
     }
@@ -55,9 +55,7 @@ class LayerBackedButton: NSButton {
             NSAnimationContext.current.duration = duration
             NSAnimationContext.current.timingFunction = CAMediaTimingFunction(controlPoints: 0.5, 1.8, 1, 1)
             let transform = CGAffineTransform(scaleX: theScale, y: theScale)
-            let translatedX = ((self.bounds.width*theScale) - self.bounds.width) / 2
-            let translatedY = ((self.bounds.height*theScale) - self.bounds.height) / 2
-            self.layer?.setAffineTransform(transform.translatedBy(x:-translatedX, y:-translatedY))
+            self.layer?.setAffineTransform(transform)
         }, completionHandler: {
 //            print("done 1")
         })
@@ -75,6 +73,7 @@ class LayerBackedButton: NSButton {
 
         if let layer = self.layer {
             layer.masksToBounds = false
+            layer.anchorPoint = CGPoint(x:0.5, y:0.5)
             layer.cornerRadius = cornerRadius
             layer.backgroundColor = backgroundColor.cgColor
         }

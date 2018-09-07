@@ -25,7 +25,6 @@ class LayerBackedButton: NSButton {
         super.init(coder: coder)
         self.wantsLayer = true
         self.layerContentsRedrawPolicy = NSView.LayerContentsRedrawPolicy.onSetNeedsDisplay
-        // self.translatesAutoresizingMaskIntoConstraints = false
         updateLayer()
     }
     
@@ -33,10 +32,49 @@ class LayerBackedButton: NSButton {
         return true
     }
     
+    override var alignmentRectInsets: NSEdgeInsets {
+        return NSEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+    }
+    override var wantsDefaultClipping: Bool {
+        return false
+    }
+    
+    override func updateTrackingAreas() {
+        for trackingArea in self.trackingAreas {
+            self.removeTrackingArea(trackingArea)
+        }
+        
+        let options: NSTrackingArea.Options = [.mouseEnteredAndExited, .activeAlways]
+        let trackingArea = NSTrackingArea(rect: self.bounds, options: options, owner: self, userInfo: nil)
+        self.addTrackingArea(trackingArea)
+    }
+    
+    private func scale (to theScale: CGFloat, within duration: Double) {
+        NSAnimationContext.runAnimationGroup({_ in
+            NSAnimationContext.current.allowsImplicitAnimation = true
+            NSAnimationContext.current.duration = duration
+            NSAnimationContext.current.timingFunction = CAMediaTimingFunction(controlPoints: 0.5, 1.8, 1, 1)
+            let transform = CGAffineTransform(scaleX: theScale, y: theScale)
+            let translatedX = ((self.bounds.width*theScale) - self.bounds.width) / 2
+            let translatedY = ((self.bounds.height*theScale) - self.bounds.height) / 2
+            self.layer?.setAffineTransform(transform.translatedBy(x:-translatedX, y:-translatedY))
+        }, completionHandler: {
+//            print("done 1")
+        })
+    }
+    
+    override func mouseEntered(with theEvent: NSEvent) {
+        scale(to: 0.9, within:0.2)
+    }
+    
+    override func mouseExited(with theEvent: NSEvent) {
+        scale(to: 1.0, within:0.1)
+    }
+    
     override func updateLayer() {
+
         if let layer = self.layer {
-            layer.frame = bounds
-            layer.mask = layerMask()
+            layer.masksToBounds = false
             layer.cornerRadius = cornerRadius
             layer.backgroundColor = backgroundColor.cgColor
         }
@@ -46,15 +84,6 @@ class LayerBackedButton: NSButton {
     
     private var cornerRadius: CGFloat {
         return bounds.height / 2
-    }
-    
-    private func layerMask() -> CAShapeLayer {
-        let mask = CAShapeLayer()
-        mask.path = CGPath(roundedRect: self.bounds,
-                           cornerWidth: (layer?.cornerRadius)!,
-                           cornerHeight: (layer?.cornerRadius)!,
-                           transform: nil)
-        return mask
     }
     
     private func updateTitleAttributes() {

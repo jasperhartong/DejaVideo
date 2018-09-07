@@ -12,7 +12,7 @@ import Cocoa
 class RecordingProgressController: NSViewController {
     // MARK: Outlets
     @IBOutlet weak var image: NSImageView!
-    @IBOutlet weak var exportButton: NSButton!
+    @IBOutlet weak var exportButton: LayerBackedButton!
     @IBAction func buttonClicked(_ sender: NSButton) {
         self.openSavePanel()
     }

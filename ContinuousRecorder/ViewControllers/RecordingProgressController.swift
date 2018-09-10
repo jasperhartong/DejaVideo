@@ -16,7 +16,7 @@ class RecordingProgressController: NSViewController {
     @IBAction func buttonClicked(_ sender: NSButton) {
         self.openSavePanel()
     }
-    @IBOutlet weak var recordingButton: NSButton!
+    @IBOutlet weak var recordingButton: LayerBackedButton!
     @IBAction func recordingButtonClicked(_ sender: Any) {
         switch recording.state {
         case .idle:
@@ -106,14 +106,14 @@ class RecordingProgressController: NSViewController {
         case .idle:
             image.image = imageLogo
             image.isHidden = false
-            exportButton.isHidden = true
+            exportButton.hide()
             if let timer = exportButtonTextTimer {
                 timer.invalidate()
             }
 
         case .recording:
             image.isHidden = true
-            exportButton.isHidden = false
+            exportButton.show(animated: true)
             exportButton.isEnabled = true
             updateExportButtonText()
             exportButtonTextTimer = Timer.scheduledTimer(
@@ -130,7 +130,7 @@ class RecordingProgressController: NSViewController {
             // TODO: Let image animate while exporting
             image.image = imageExporting
             image.isHidden = false
-            exportButton.isHidden = true
+            exportButton.hide()
         }
     }
     
@@ -164,7 +164,6 @@ class RecordingProgressController: NSViewController {
         savePanel = NSSavePanel()
 
         super.init(nibName: NSNib.Name(rawValue: "RecordingProgressView"), bundle: nil)
-
         configureSavePanel()
         observeRecording()
     }

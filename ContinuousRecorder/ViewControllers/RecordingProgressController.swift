@@ -42,22 +42,41 @@ class RecordingProgressController: NSViewController {
         savePanel.level = .modalPanel
     }
     private func openSavePanel () {
+        let prepSuccess = recording.prepExporting()
+        if !prepSuccess {
+            presentNotification("Export Error", "Something went wrong preparing the export, please try again.")
+            return
+        }
+        // optional callback
         savePanelOpened?()
         
         // Make sure that savePanel is on top an in focus
         NSApp.activate(ignoringOtherApps: true)
         
-        // open savePanel
+        // open savePanel and await response
         savePanel.begin { (modalResponse) in
-            if modalResponse == .OK {
-                if let destination = self.savePanel.url {
-                    self.renderTo(destination: destination)
-                } else {
-                    print("Something went wrong")
-                }
+            self.savePanelCallback(modalResponse)
+        }
+    }
+    
+    private func savePanelCallback(_ modalResponse: NSApplication.ModalResponse) {
+        // turn off app focus
+        NSApp.activate(ignoringOtherApps: false)
+
+        switch modalResponse {
+        case .OK:
+            if let destination = self.savePanel.url {
+                self.renderTo(destination: destination)
+            } else {
+                fallthrough
             }
-            // turn off app focus
-            NSApp.activate(ignoringOtherApps: false)
+        case .cancel:
+            let cancelSuccess = self.recording.cancelExport()
+            if !cancelSuccess {
+                self.presentNotification("Export Error", "Something went wrong cancelling the export, best is to restart the app. Sorry :).")
+            }
+        default:
+            self.presentNotification("Export Error", "No destination could be determined, please try again.")
         }
     }
     
@@ -99,9 +118,10 @@ class RecordingProgressController: NSViewController {
             startButton.isEnabled = false
             stopButton.isEnabled = true
             stopButton.show(animated: true)
-        case .recordingExporting:
+        case .exporting, .preppedExport:
             startButton.isEnabled = false
             startButton.title = "Exporting.."
+            stopButton.hide(animated: true)
         }
     }
     
@@ -130,7 +150,7 @@ class RecordingProgressController: NSViewController {
             // Make sure it updates when the menu is open
             RunLoop.main.add(exportButtonTextTimer, forMode: .commonModes)
 
-        case .recordingExporting:
+        case .exporting, .preppedExport:
             // TODO: Let image animate while exporting
             image.image = imageExporting
             exportButton.hide()

@@ -87,13 +87,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     private func updateMenuImage() {
-        // TODO: Add state when menu is open
         switch recording.state {
         case .idle:
             statusItem?.image = menuImageIdle
         case .recording:
             statusItem?.image = menuImageRecording
-        case .recordingExporting:
+        case .exporting, .preppedExport:
             // TODO: Add animation
             statusItem?.image = menuImageExporting
         }
@@ -115,14 +114,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     // MARK: Menu actions
-    @objc func start() {
-        recording.start()
-    }
-    
-    @objc func stop() {
-        recording.stop(clearFragments: true)
-    }
-    
     @objc func settings() {
         settingsWindowController.window?.setIsVisible(true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

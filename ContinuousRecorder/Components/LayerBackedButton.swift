@@ -88,7 +88,7 @@ class LayerBackedButton: NSButton {
     private func scale (to theScale: CGFloat,
                         within duration: Double,
                         completion: (()->Void)? = nil,
-                        timingFunction: CAMediaTimingFunction? = CAMediaTimingFunction(controlPoints: 0.5, 1.6, 1, 1))
+                        timingFunction: CAMediaTimingFunction? = CAMediaTimingFunction(controlPoints: 0.5, 1.4, 1, 1))
     {
         NSAnimationContext.runAnimationGroup({_ in
             NSAnimationContext.current.allowsImplicitAnimation = true
@@ -127,7 +127,7 @@ class LayerBackedButton: NSButton {
             scale(to: 0.0, within:0.0, completion: {() -> Void in
                 self.isHidden = false
                 // animate in without growing too much in the timing function
-                self.scale(to: 1.0, within: 0.3, timingFunction: CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn))
+                self.scale(to: 1.0, within: 0.3, timingFunction: CAMediaTimingFunction(controlPoints: 0.5, 1.3, 1, 1))
             })
         } else {
             self.isHidden = false

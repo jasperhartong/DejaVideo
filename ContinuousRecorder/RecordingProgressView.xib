@@ -77,7 +77,7 @@
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="deja-video-400w" id="6A3-MM-ZgB"/>
                         </imageView>
                         <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1vE-A7-R6R" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
-                            <rect key="frame" x="156" y="86" width="32" height="14"/>
+                            <rect key="frame" x="170" y="86" width="32" height="14"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="bevel" title="stop" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="jAT-Aa-XNr">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>

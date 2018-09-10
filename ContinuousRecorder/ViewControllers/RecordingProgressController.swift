@@ -116,6 +116,7 @@ class RecordingProgressController: NSViewController {
             }
 
         case .recording:
+            image.image = imageLogo
             exportButton.show(animated: true)
             exportButton.isEnabled = true
             updateExportButtonText()

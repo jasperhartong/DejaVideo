@@ -120,10 +120,13 @@ class LayerBackedButton: NSButton {
 
     // MARK: Animated public methods
     func show(animated: Bool = false) {
+        if (!isHidden) {
+            return
+        }
         if animated {
-            // animate in without growing too much in the timing function
             scale(to: 0.0, within:0.0, completion: {() -> Void in
                 self.isHidden = false
+                // animate in without growing too much in the timing function
                 self.scale(to: 1.0, within: 0.3, timingFunction: CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn))
             })
         } else {
@@ -131,8 +134,11 @@ class LayerBackedButton: NSButton {
         }
     }
     func hide(animated: Bool = false) {
+        if (isHidden) {
+            return
+        }
         if animated {
-            scale(to: 1.0, within:1.0, completion: {() -> Void in
+            scale(to: 1.0, within:0.0, completion: {() -> Void in
                 self.scale(to: 0.0, within:0.3, completion: {() -> Void in
                     self.isHidden = true
                 })

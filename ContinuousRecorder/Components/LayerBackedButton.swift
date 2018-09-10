@@ -25,7 +25,7 @@ class LayerBackedButton: NSButton {
     private var cornerRadius: CGFloat {
         return bounds.height / 2
     }
-
+    
     // MARK: Outlets
     @IBInspectable
     var backgroundColor: NSColor = NSColor.controlColor { didSet { updateLayer() } }
@@ -65,6 +65,7 @@ class LayerBackedButton: NSButton {
             layer.cornerRadius = cornerRadius
             layer.backgroundColor = backgroundColor.cgColor
         }
+
         // Set outlet controlled non-layer attributes
         let color = isHighlighted ? textColorSelected : textColor
         

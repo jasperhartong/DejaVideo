@@ -28,10 +28,10 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="deja-video-400w" id="6A3-MM-ZgB"/>
                         </imageView>
-                        <button verticalHuggingPriority="750" fixedFrame="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hBZ-5d-DDk" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
+                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hBZ-5d-DDk" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
                             <rect key="frame" x="8" y="43" width="194" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="bevel" title="Export last second" bezelStyle="rounded" image="export-button-icon-28h" imagePosition="left" alignment="center" imageScaling="proportionallyDown" inset="2" id="Fj5-Yw-tS2">
+                            <buttonCell key="cell" type="bevel" title="Export last second" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Fj5-Yw-tS2">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
@@ -83,6 +83,5 @@
     </objects>
     <resources>
         <image name="deja-video-400w" width="400" height="124"/>
-        <image name="export-button-icon-28h" width="52" height="28"/>
     </resources>
 </document>

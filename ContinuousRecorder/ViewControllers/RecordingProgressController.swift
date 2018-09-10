@@ -13,18 +13,20 @@ class RecordingProgressController: NSViewController {
     // MARK: Outlets
     @IBOutlet weak var image: NSImageView!
     @IBOutlet weak var exportButton: LayerBackedButton!
-    @IBAction func buttonClicked(_ sender: NSButton) {
+    @IBAction func exportButtonClicked(_ sender: NSButton) {
         self.openSavePanel()
     }
-    @IBOutlet weak var recordingButton: LayerBackedButton!
-    @IBAction func recordingButtonClicked(_ sender: Any) {
-        switch recording.state {
-        case .idle:
+    @IBOutlet weak var startButton: LayerBackedButton!
+    @IBAction func startButtonClicked(_ sender: Any) {
+        if recording.state == .idle {
             self.recording.start()
-        case .recording:
+        }
+    }
+    
+    @IBOutlet weak var stopButton: LayerBackedButton!
+    @IBAction func stopButtonClicked(_ sender: Any) {
+        if recording.state == .recording {
             self.recording.stop(clearFragments: true)
-        case .recordingExporting:
-            break
         }
     }
     
@@ -65,7 +67,7 @@ class RecordingProgressController: NSViewController {
     private func observeRecording() {
         observers = [
             self.recording.observe(\ContinuousRecording.state) { recording, observedChange in
-                self.updateRecordingButton()
+                self.updateRecordingButtons()
                 self.updateExportButton()
             }
         ]
@@ -86,17 +88,20 @@ class RecordingProgressController: NSViewController {
     }
     
     // MARK: recordingButton
-    private func updateRecordingButton() {
+    private func updateRecordingButtons() {
         switch recording.state {
         case .idle:
-            recordingButton.isEnabled = true
-            recordingButton.title = "Start Recording"
+            startButton.isEnabled = true
+            startButton.title = "Start Recording"
+            stopButton.isEnabled = false
+            stopButton.hide(animated: true)
         case .recording:
-            recordingButton.isEnabled = true
-            recordingButton.title = "Stop Recording"
+            startButton.isEnabled = false
+            stopButton.isEnabled = true
+            stopButton.show(animated: true)
         case .recordingExporting:
-            recordingButton.isEnabled = false
-            recordingButton.title = "Exporting.."
+            startButton.isEnabled = false
+            startButton.title = "Exporting.."
         }
     }
     
@@ -105,14 +110,12 @@ class RecordingProgressController: NSViewController {
         switch recording.state {
         case .idle:
             image.image = imageLogo
-            image.isHidden = false
-            exportButton.hide()
+            exportButton.hide(animated: true)
             if let timer = exportButtonTextTimer {
                 timer.invalidate()
             }
 
         case .recording:
-            image.isHidden = true
             exportButton.show(animated: true)
             exportButton.isEnabled = true
             updateExportButtonText()
@@ -129,7 +132,6 @@ class RecordingProgressController: NSViewController {
         case .recordingExporting:
             // TODO: Let image animate while exporting
             image.image = imageExporting
-            image.isHidden = false
             exportButton.hide()
         }
     }
@@ -156,7 +158,7 @@ class RecordingProgressController: NSViewController {
     override func viewDidLayout() {
         // Doubledowns on ensuring that the indicator states are always correct
         updateExportButton()
-        updateRecordingButton()
+        updateRecordingButtons()
     }
     
     init(_ rec: ContinuousRecording) {

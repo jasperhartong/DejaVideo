@@ -148,6 +148,4 @@ class LayerBackedButton: NSButton {
             self.isHidden = true
         }
     }
-    
-    
 }

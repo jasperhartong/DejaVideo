@@ -8,6 +8,10 @@
 
 import Cocoa
 
+class CustomStatusBarButton: NSStatusBarButton {
+    
+}
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     @objc var recording: ContinuousRecording!
@@ -52,8 +56,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         recordingProgressController.savePanelOpened = {
             self.statusItem?.menu?.cancelTracking()
         }
-        settingsWindowController = SettingsWindowController()
         itemProgress.view = recordingProgressController.view
+        
+        settingsWindowController = SettingsWindowController()
 
         // Set up observers
         observeRecording()
@@ -82,6 +87,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     private func updateMenuImage() {
+        // TODO: Add state when menu is open
         switch recording.state {
         case .idle:
             statusItem?.image = menuImageIdle
@@ -96,6 +102,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: Application Lifecycle
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        // TODO: For now don't highlight the menu so the menu images show nice
+        statusItem?.highlightMode = false
 
         createMenu()
         updateMenuImage()

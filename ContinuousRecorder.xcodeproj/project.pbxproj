@@ -13,6 +13,8 @@
 		A42709D321305DEF000BF7C3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A42709D121305DEF000BF7C3 /* MainMenu.xib */; };
 		A42709DF21305DF0000BF7C3 /* ContinuousRecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709DE21305DF0000BF7C3 /* ContinuousRecorderTests.swift */; };
 		A42709EB213061D3000BF7C3 /* ContinuousRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */; };
+		A4A93A80214804B000FA4158 /* GeneralSettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A93A7F214804B000FA4158 /* GeneralSettingsView.xib */; };
+		A4A93A822148090200FA4158 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A93A812148090200FA4158 /* AboutView.xib */; };
 		A4C0F1FB21381BCE00BF2215 /* RecordingProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4C0F1FA21381BCE00BF2215 /* RecordingProgressView.xib */; };
 		A4C0F1FD21381D1700BF2215 /* RecordingProgressController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C0F1FC21381D1700BF2215 /* RecordingProgressController.swift */; };
 		A4C0F20021393A4E00BF2215 /* Morphy.wav in Resources */ = {isa = PBXBuildFile; fileRef = A4C0F1FF21393A4D00BF2215 /* Morphy.wav */; };
@@ -46,6 +48,8 @@
 		A42709DE21305DF0000BF7C3 /* ContinuousRecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousRecorderTests.swift; sourceTree = "<group>"; };
 		A42709E021305DF0000BF7C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousRecorder.swift; sourceTree = "<group>"; };
+		A4A93A7F214804B000FA4158 /* GeneralSettingsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GeneralSettingsView.xib; sourceTree = "<group>"; };
+		A4A93A812148090200FA4158 /* AboutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
 		A4C0F1FA21381BCE00BF2215 /* RecordingProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecordingProgressView.xib; sourceTree = "<group>"; };
 		A4C0F1FC21381D1700BF2215 /* RecordingProgressController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingProgressController.swift; sourceTree = "<group>"; };
 		A4C0F1FF21393A4D00BF2215 /* Morphy.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Morphy.wav; sourceTree = "<group>"; };
@@ -112,9 +116,11 @@
 				A42709CD21305DEE000BF7C3 /* AppDelegate.swift */,
 				A42709CF21305DEF000BF7C3 /* Assets.xcassets */,
 				A4C0F1FE21393A4D00BF2215 /* SoundEffects */,
+				A4A93A812148090200FA4158 /* AboutView.xib */,
 				A42709D121305DEF000BF7C3 /* MainMenu.xib */,
 				A4CD54DC213E672E00F191E2 /* SettingsWindow.xib */,
 				A4C0F1FA21381BCE00BF2215 /* RecordingProgressView.xib */,
+				A4A93A7F214804B000FA4158 /* GeneralSettingsView.xib */,
 				A42709D421305DEF000BF7C3 /* Info.plist */,
 				A42709D521305DEF000BF7C3 /* ContinuousRecorder.entitlements */,
 			);
@@ -259,6 +265,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4A93A80214804B000FA4158 /* GeneralSettingsView.xib in Resources */,
+				A4A93A822148090200FA4158 /* AboutView.xib in Resources */,
 				A42709D021305DEF000BF7C3 /* Assets.xcassets in Resources */,
 				A4CD54DD213E672E00F191E2 /* SettingsWindow.xib in Resources */,
 				A4C0F20021393A4E00BF2215 /* Morphy.wav in Resources */,

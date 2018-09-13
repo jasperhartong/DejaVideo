@@ -147,14 +147,18 @@ class VidWriter {
 
         let pointerRect = CGRect(x: flippedPoint.x-10.0, y: flippedPoint.y-10.0, width: 20.0, height: 20.0)
         if let context = context {
+            let red =       CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 1.0)
+            let red_a =     CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 0.6)
+            let white_a =   CGColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
+
             context.protectGState {
                 // add image
                 context.draw(cgImage, in: bounds)
                 // add circle
-                context.setFillColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0) // Red
+                context.setFillColor(red)
                 context.fillEllipse(in: pointerRect)
                 // add circle stroke
-                context.setStrokeColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5) // White
+                context.setStrokeColor(white_a)
                 context.setLineWidth(6.0)
                 context.strokeEllipse(in: pointerRect)
                 // add line
@@ -164,7 +168,7 @@ class VidWriter {
                     let path = CGMutablePath()
                     let pattern: [CGFloat] = [3.0, 12.0]
                     path.move(to: flippedPrevPoints.first!)
-                    context.setStrokeColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 0.6) // Red
+                    context.setStrokeColor(red_a)
                     context.setLineCap(.round)
                     context.setLineDash(phase: 0, lengths: pattern)
                     path.addLines(between: flippedPrevPoints)

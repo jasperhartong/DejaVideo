@@ -13,6 +13,9 @@ import Cocoa
 
 class GeneralSettingsViewController: NSViewController {
     
+    @IBAction func roadmapButtonClicked(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://roadmap.dejavideo.com")!)
+    }
     init() {
         super.init(nibName: NSNib.Name(rawValue: "GeneralSettingsView"), bundle: nil)
     }
@@ -20,10 +23,14 @@ class GeneralSettingsViewController: NSViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
 }
 
 class AboutViewController: NSViewController {
     
+    @IBAction func twitterButtonClicked(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://twitter.com/jasperhartong")!)
+    }
     init() {
         super.init(nibName: NSNib.Name(rawValue: "AboutView"), bundle: nil)
     }

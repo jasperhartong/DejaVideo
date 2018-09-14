@@ -54,6 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Set up controllers of (sub) views
         recordingProgressController = RecordingProgressController(recording)
         recordingProgressController.savePanelOpened = {
+            // close menu
             self.statusItem?.menu?.cancelTracking()
         }
         itemProgress.view = recordingProgressController.view

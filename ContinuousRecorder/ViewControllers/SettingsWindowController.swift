@@ -43,6 +43,7 @@ class GeneralSettingsViewController: NSViewController {
 }
 
 class AboutViewController: NSViewController {
+    @IBOutlet weak var versionLabel: NSTextFieldCell!
     
     @IBAction func twitterButtonClicked(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://twitter.com/jasperhartong")!)
@@ -53,6 +54,12 @@ class AboutViewController: NSViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            self.versionLabel.stringValue = "v\(version) - build: \(build)"
+        }
     }
 }
 

@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="AboutViewController" customModule="ContinuousRecorder" customModuleProvider="target">
             <connections>
+                <outlet property="versionLabel" destination="umf-lH-9RT" id="X87-UD-TCS"/>
                 <outlet property="view" destination="c22-O7-iKe" id="UZg-yr-Qhi"/>
             </connections>
         </customObject>
@@ -32,7 +33,7 @@
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yDc-xY-Nj6">
-                    <rect key="frame" x="262" y="97" width="184" height="155"/>
+                    <rect key="frame" x="262" y="174" width="184" height="78"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Thanks to:  - The test users - Lola " id="Cz0-y9-abf">
                         <font key="font" metaFont="smallSystem"/>
@@ -51,7 +52,7 @@
                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D1I-aN-5aF" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
                             <rect key="frame" x="21" y="24" width="179" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="bevel" title="@jasperhartong" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="LLq-Vf-fpc">
+                            <buttonCell key="cell" type="bevel" title="@jasperhartong" bezelStyle="rounded" alignment="center" refusesFirstResponder="YES" imageScaling="proportionallyDown" inset="2" id="LLq-Vf-fpc">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
@@ -72,6 +73,15 @@
                         </button>
                     </subviews>
                 </customView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Onm-ZF-GqX">
+                    <rect key="frame" x="262" y="20" width="200" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Version" id="umf-lH-9RT">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
         </customView>
     </objects>

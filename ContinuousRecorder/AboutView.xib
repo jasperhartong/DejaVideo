@@ -51,7 +51,7 @@
                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D1I-aN-5aF" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
                             <rect key="frame" x="21" y="24" width="179" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="bevel" title="@jasperhartong" bezelStyle="rounded" alignment="center" refusesFirstResponder="YES" imageScaling="proportionallyDown" inset="2" id="LLq-Vf-fpc">
+                            <buttonCell key="cell" type="bevel" title="@jasperhartong" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="LLq-Vf-fpc">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>

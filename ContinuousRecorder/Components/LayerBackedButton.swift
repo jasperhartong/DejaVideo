@@ -45,6 +45,8 @@ class LayerBackedButton: NSButton {
         self.layerContentsRedrawPolicy = NSView.LayerContentsRedrawPolicy.onSetNeedsDisplay
         // Ensure that our parentView also is a layer backed view so we can cross our bounds
         self.superview?.wantsLayer = true
+        // Ensure we don't have a focus ring
+        self.focusRingType = .none
         updateLayer()
     }
 
@@ -67,7 +69,8 @@ class LayerBackedButton: NSButton {
         }
 
         // Set outlet controlled non-layer attributes
-        let color = isHighlighted ? textColorSelected : textColor
+        // TODO: Add a separate visualization between isHighlighted and isFirstResponder
+        let color = (isHighlighted || self.window?.firstResponder == self) ? textColorSelected : textColor
         
         if let mutableAttributedTitle = attributedTitle.mutableCopy() as? NSMutableAttributedString {
             // Copies over title attributes to only change what we desire
@@ -117,6 +120,7 @@ class LayerBackedButton: NSButton {
     // Scale for hover feedback
     override func mouseEntered(with theEvent: NSEvent) { scale(to: 1.07, within: 0.2) }
     override func mouseExited(with theEvent: NSEvent) { scale(to: 1.0, within: 0.3) }
+
     
 
     // MARK: Animated public methods

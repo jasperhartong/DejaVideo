@@ -77,6 +77,18 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSToolbarD
     func windowWillClose(_ notification: Notification) {
         NSApp.activate(ignoringOtherApps: false)
     }
+    
+    override func keyDown(with event: NSEvent) {
+        // Let cmd-w work to close settings window
+        if event.modifierFlags.contains(.command) {
+            switch event.charactersIgnoringModifiers! {
+            case "w":
+                self.window?.close()
+            default:
+                break
+            }
+        }
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

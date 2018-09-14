@@ -12,16 +12,32 @@ import Foundation
 import Cocoa
 
 class GeneralSettingsViewController: NSViewController {
+    @IBOutlet weak var launchAtLoginCheckbox: NSButton!
+    @IBAction func launchAtLoginCheckboxClicked(_ sender: Any) {
+        _ = LaunchService.shared.toggleLaunchAtLogin(launchAtLoginCheckbox.state == .on)
+        
+    }
     
     @IBAction func roadmapButtonClicked(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://roadmap.dejavideo.com")!)
     }
     init() {
         super.init(nibName: NSNib.Name(rawValue: "GeneralSettingsView"), bundle: nil)
+        _ = LaunchService.shared.observe(\LaunchService.isEnabled) { _, _ in
+            self.updateLaunchAtLoginCheckbox()
+        }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        updateLaunchAtLoginCheckbox()
+    }
+    
+    func updateLaunchAtLoginCheckbox() {
+        launchAtLoginCheckbox.state = LaunchService.shared.isEnabled ? .on : .off
     }
     
 }

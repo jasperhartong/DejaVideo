@@ -8,10 +8,6 @@
 
 import Cocoa
 
-class CustomStatusBarButton: NSStatusBarButton {
-    
-}
-
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     @objc var recording: ContinuousRecording!
@@ -101,6 +97,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: Application Lifecycle
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        LaunchService.shared.checkHelper()
+
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         // TODO: For now don't highlight the menu so the menu images show nice
         statusItem?.highlightMode = false

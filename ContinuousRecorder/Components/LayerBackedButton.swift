@@ -10,10 +10,17 @@ import Foundation
 import AppKit
 /**
  * LayerBackedButton are rounded animatable buttons used throughout the interface
+ *
  * Customization is allowed for the:
  * - backgroundColor
  * - textColor
  * - textColorSelected
+ *
+ * Handled button states:
+ * - isSelected (when clicked and hold)
+ * - mouseEntered
+ * - mouseExited
+ * - isFirstResponder (when focused by tabbing towards it)
  *
  * Animatable methods:
  * - hide
@@ -24,6 +31,13 @@ import AppKit
 class LayerBackedButton: NSButton {
     private var cornerRadius: CGFloat {
         return bounds.height / 2
+    }
+    
+    private var isFirstResponder: Bool {
+        if let window = self.window {
+            return window.firstResponder == self
+        }
+        return false
     }
     
     // MARK: Outlets
@@ -53,6 +67,8 @@ class LayerBackedButton: NSButton {
     /// avoids clipping the view
     override var wantsDefaultClipping:Bool{return false}
     
+    
+    /// The main update method: renders correct button state onto the layer
     override func updateLayer() {
         if let layer = self.layer {
             // Ensure animations can happen outside own mas
@@ -70,7 +86,7 @@ class LayerBackedButton: NSButton {
 
         // Set outlet controlled non-layer attributes
         // TODO: Add a separate visualization between isHighlighted and isFirstResponder
-        let color = (isHighlighted || self.window?.firstResponder == self) ? textColorSelected : textColor
+        let color = (isHighlighted || isFirstResponder) ? textColorSelected : textColor
         
         if let mutableAttributedTitle = attributedTitle.mutableCopy() as? NSMutableAttributedString {
             // Copies over title attributes to only change what we desire
@@ -106,8 +122,8 @@ class LayerBackedButton: NSButton {
     }
     
 
-    // MARK: Mouse tracking
-    /// Allows us to hook into trackin events like mouseEntered and mouseExited
+    // MARK: Mouse tracking for hover feedback
+    /// Allows us to hook into tracking events like mouseEntered and mouseExited
     override func updateTrackingAreas() {
         for trackingArea in self.trackingAreas {
             self.removeTrackingArea(trackingArea)

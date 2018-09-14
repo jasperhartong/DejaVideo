@@ -46,7 +46,7 @@
                                 <action selector="startButtonClicked:" target="-2" id="yo4-uC-DaX"/>
                             </connections>
                         </button>
-                        <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hBZ-5d-DDk" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
+                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hBZ-5d-DDk" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
                             <rect key="frame" x="8" y="7" width="194" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="bevel" title="Export last second" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Fj5-Yw-tS2">
@@ -76,7 +76,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="deja-video-400w" id="6A3-MM-ZgB"/>
                         </imageView>
-                        <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1vE-A7-R6R" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
+                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1vE-A7-R6R" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
                             <rect key="frame" x="170" y="86" width="32" height="14"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="bevel" title="stop" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="jAT-Aa-XNr">

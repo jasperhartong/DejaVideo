@@ -30,12 +30,15 @@ class RecordingProgressController: NSViewController {
         }
     }
     
+    // MARK: Callbacks
+    var savePanelOpened: (() -> Void)?
+    
+    // MARK: Images
     private let imageExporting: NSImage = NSImage(named: NSImage.Name(rawValue: "exporting-indicator-400w"))!
     private let imageLogo: NSImage = NSImage(named: NSImage.Name(rawValue: "deja-video-400w"))!
     
     // MARK: SavePanel
     private let savePanel: NSSavePanel
-    var savePanelOpened: (() -> Void)?
     private func configureSavePanel() {
         savePanel.allowedFileTypes = ["mp4"]
         savePanel.allowsOtherFileTypes = false
@@ -107,37 +110,37 @@ class RecordingProgressController: NSViewController {
     }
     
     // MARK: recordingButton
-    private func updateRecordingButtons() {
+    private func updateRecordingButtons(firstTime: Bool = false) {
         switch recording.state {
         case .idle:
             startButton.isEnabled = true
             startButton.title = "Start Recording"
             stopButton.isEnabled = false
-            stopButton.hide(animated: true)
+            stopButton.hide(animated: !firstTime)
         case .recording:
             startButton.isEnabled = false
             stopButton.isEnabled = true
-            stopButton.show(animated: true)
+            stopButton.show(animated: !firstTime)
         case .exporting, .preppedExport:
             startButton.isEnabled = false
             startButton.title = "Exporting.."
-            stopButton.hide(animated: true)
+            stopButton.hide(animated: !firstTime)
         }
     }
     
     // MARK: exportButton
-    private func updateExportButton() {
+    private func updateExportButton(firstTime: Bool = false) {
         switch recording.state {
         case .idle:
             image.image = imageLogo
-            exportButton.hide(animated: true)
+            exportButton.hide(animated: !firstTime)
             if let timer = exportButtonTextTimer {
                 timer.invalidate()
             }
 
         case .recording:
             image.image = imageLogo
-            exportButton.show(animated: true)
+            exportButton.show(animated: !firstTime)
             exportButton.isEnabled = true
             updateExportButtonText()
             exportButtonTextTimer = Timer.scheduledTimer(
@@ -175,8 +178,13 @@ class RecordingProgressController: NSViewController {
         // update exportButton
         exportButton.title = "Export last \(readableTime)"
     }
+
+    override func viewDidLoad() {
+        updateExportButton(firstTime:true)
+        updateRecordingButtons(firstTime:true)
+    }
     
-    override func viewDidLayout() {
+    override func viewWillLayout() {
         // Doubledowns on ensuring that the indicator states are always correct
         updateExportButton()
         updateRecordingButtons()

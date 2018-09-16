@@ -272,15 +272,12 @@ enum RecordingState: Int {
         
         NSLog("Exporting \(exportFragments.count) fragments ")
 
-        let queue = DispatchQueue(label:"export", qos: .utility)
+        let queue = DispatchQueue(label:"export", qos: .userInitiated)
         queue.async {
             let settings = VidWriter.videoSettings(
                 codec: AVVideoCodecType.h264,
                 width: anImage.width,
                 height: anImage.height)
-            
-            // Always make sure that the exporting state is at least shown a second
-            sleep(1)
 
             // Note: Currently we always overwrite the destination by first deleting it
             // TODO: Add more error cases? Like when writing fails?

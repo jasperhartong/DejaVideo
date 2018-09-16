@@ -74,7 +74,7 @@ class VidWriter {
         self.assetWriter.startWriting()
         self.assetWriter.startSession(atSourceTime: kCMTimeZero)
         
-        let mediaInputQueue = DispatchQueue(label: "MediaInputQueu")
+        let mediaInputQueue = DispatchQueue(label: "mediaInputQueue")
         
         var i = 0
         let frameNumber = fragments.count
@@ -101,7 +101,8 @@ class VidWriter {
                                     prevPoints = [point2, point1]
                                 }
                             }
-                            sampleBuffer = self.newPixelBufferFrom(cgImage: self.overlayImage(cgImage:image, point:point, prevPoints: prevPoints))
+                            sampleBuffer = self.newPixelBufferFrom(
+                                cgImage: self.overlayImage(cgImage:image, point:point, prevPoints: prevPoints))
                             
                         }
                     }) // End of autoreleasepool
@@ -137,6 +138,10 @@ class VidWriter {
         }
     }
     
+    private let circleFill =    CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 1.0)
+    private let circleStroke =  CGColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
+    private let lineStroke =    CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 0.6)
+
     func overlayImage(cgImage: CGImage, point: NSPoint, prevPoints: [NSPoint]) -> CGImage {
         let context = CGContext(data: nil, width: cgImage.width, height: cgImage.height,
                                 bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: 0,
@@ -147,18 +152,14 @@ class VidWriter {
 
         let pointerRect = CGRect(x: flippedPoint.x-10.0, y: flippedPoint.y-10.0, width: 20.0, height: 20.0)
         if let context = context {
-            let magenta =   CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 1.0)
-            let magenta_a = CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 0.6)
-            let white_a =   CGColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
-
             context.protectGState {
                 // add image
                 context.draw(cgImage, in: bounds)
                 // add circle
-                context.setFillColor(magenta)
+                context.setFillColor(circleFill)
                 context.fillEllipse(in: pointerRect)
                 // add circle stroke
-                context.setStrokeColor(white_a)
+                context.setStrokeColor(circleStroke)
                 context.setLineWidth(6.0)
                 context.strokeEllipse(in: pointerRect)
                 // add line
@@ -166,11 +167,10 @@ class VidWriter {
                     var flippedPrevPoints = prevPoints.map {$0.flipped(totalY: cgImage.height)}
                     flippedPrevPoints.append(flippedPoint)
                     let path = CGMutablePath()
-                    let pattern: [CGFloat] = [3.0, 12.0]
                     path.move(to: flippedPrevPoints.first!)
-                    context.setStrokeColor(magenta_a)
+                    context.setStrokeColor(lineStroke)
                     context.setLineCap(.round)
-                    context.setLineDash(phase: 0, lengths: pattern)
+                    context.setLineDash(phase: 0, lengths: [3.0, 12.0])
                     path.addLines(between: flippedPrevPoints)
                     context.addPath(path)
                     context.strokePath()

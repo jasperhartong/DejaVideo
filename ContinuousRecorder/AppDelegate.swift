@@ -32,8 +32,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Embedded recording progress view
     var recordingProgressController: RecordingProgressController!
     
-    // Settings View Window
-    var settingsWindowController: SettingsWindowController!
+    // Secondary Windows
+    let settingsWindowController = SettingsWindowController()
+    let exportEffectWindowController = ExportEffectWindowController()
     
     // Starting up the main app
     override init () {
@@ -54,8 +55,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusItem?.menu?.cancelTracking()
         }
         itemProgress.view = recordingProgressController.view
-        
-        settingsWindowController = SettingsWindowController()
 
         // Set up observers
         observeRecording()
@@ -87,11 +86,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         switch recording.state {
         case .idle:
             statusItem?.image = menuImageIdle
+            exportEffectWindowController.hide()
         case .recording:
             statusItem?.image = menuImageRecording
-        case .exporting, .preppedExport:
-            // TODO: Add animation
+            exportEffectWindowController.hide()
+        case .preppedExport:
             statusItem?.image = menuImageExporting
+            exportEffectWindowController.hide()
+        case .exporting:
+            statusItem?.image = menuImageExporting
+            exportEffectWindowController.show()
         }
     }
     

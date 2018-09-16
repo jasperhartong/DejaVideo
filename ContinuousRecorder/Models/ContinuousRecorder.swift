@@ -201,8 +201,21 @@ enum RecordingState: Int {
     
     var exportFragments: [RecordingFragment] = []
     
+    private let stateKey: String = "RecordingState"
+    @objc dynamic var state: RecordingState = .idle {
+        didSet {
+            UserDefaults.standard.set(state.rawValue, forKey: stateKey)
+        }
+    }
+    
+    private func recoverState() {
+        let recoveredState = RecordingState(rawValue: UserDefaults.standard.integer(forKey: stateKey))
 
-    @objc dynamic var state: RecordingState = .idle
+        // Restart recording if it wasn't idle before
+        if (recoveredState != .idle) {
+            start()
+        }
+    }
     
     init(
         screenId: CGDirectDisplayID = CGMainDisplayID(),
@@ -211,6 +224,7 @@ enum RecordingState: Int {
         self.screenId = screenId
         self.config = config
         super.init(retention: config.retention, interval: config.fragmentInterval)
+        recoverState()
     }
     
     func start() {

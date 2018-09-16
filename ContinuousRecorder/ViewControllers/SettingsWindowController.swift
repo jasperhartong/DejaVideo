@@ -70,9 +70,11 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSToolbarD
     // MARK: Outlets
     @IBAction func activateTabGeneral(_ sender: Any) {
         contentViewController = generalSettingsViewController
+        self.window?.toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "General")
     }
     @IBAction func activateTabAbout(_ sender: Any) {
         contentViewController = aboutViewController
+        self.window?.toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "About")
     }
     
     // MARK: Window setup and teardown
@@ -89,12 +91,11 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSToolbarD
         // Overloading this controller to delegate multiple things :)
         self.window?.delegate = self
         self.window?.toolbar?.delegate = self
-        self.window?.toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: "General")
-        // Set initial tab
-        contentViewController = generalSettingsViewController
         // ensure the settings window is on top
         self.window?.level = .floating
         NSApp.activate(ignoringOtherApps: true)
+        // Set initial tab
+        activateTabGeneral(self)
     }
     
     func windowWillClose(_ notification: Notification) {

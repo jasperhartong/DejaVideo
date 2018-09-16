@@ -118,13 +118,31 @@ class ExportEffectWindowController: NSWindowController {
         }
         
         let sub = CALayer()
-        let randomWidth = layer.frame.width / 100 * CGFloat(arc4random_uniform(99) + 1)
+
         let randomSecondDelay: Double = Double(arc4random_uniform(99) + 1) / 100
         let randomSecondDuration: Double = Double(arc4random_uniform(99) + 1) / 100
         let randomOpacity: Float = Float(arc4random_uniform(99) + 1) / 100
-        let forward = arc4random_uniform(2) == 0
-        let startPositionX = forward ? -randomWidth : layer.frame.width + randomWidth  // start offscreen
-        let translationX = forward ? layer.frame.width + sub.frame.width : 0 - layer.frame.width - randomWidth
+        let direction = arc4random_uniform(2) == 0
+        let horizontal = true
+        var startPositionX: CGFloat = 0.0
+        var startPositionY: CGFloat = 0.0
+        var translationX: CGFloat = 0.0
+        var translationY: CGFloat = 0.0
+        var height = layer.frame.height
+        var width = layer.frame.width
+        
+        if horizontal {
+            height = layer.frame.height / 100 * CGFloat(arc4random_uniform(99) + 1)
+            startPositionY = direction ? -height : layer.frame.height + height  // start offscreen
+            translationY = direction ? layer.frame.height + height : -height  // end offscreen
+        } else {
+            width = layer.frame.width / 100 * CGFloat(arc4random_uniform(99) + 1)
+            startPositionX = direction ? -width : layer.frame.width + height  // start offscreen
+            translationX = direction ? layer.frame.width + width : 0 - layer.frame.width - height  // end offscreen
+        }
+        
+        
+        
 
         sub.backgroundColor = NSColor(
             red: CGFloat(randomSecondDelay),
@@ -134,9 +152,9 @@ class ExportEffectWindowController: NSWindowController {
 
         sub.frame = CGRect(
             x: startPositionX,
-            y: 0,
-            width: randomWidth,
-            height: layer.frame.height)
+            y: startPositionY,
+            width: width,
+            height: height)
         layer.insertSublayer(sub, below: iconLayer)
         
         // Allow animation to be choppy, it's oldskool anyways :P
@@ -149,9 +167,9 @@ class ExportEffectWindowController: NSWindowController {
 
                 let transform = CGAffineTransform(
                     translationX: translationX,
-                    y: 0)
+                    y: translationY)
                 transform.scaledBy(x: CGFloat(randomSecondDuration), y: 0)
-                sub.opacity = randomOpacity
+                sub.opacity = randomOpacity + 0.4
                 sub.setAffineTransform(transform)
             }, completionHandler: {
                 sub.removeFromSuperlayer()

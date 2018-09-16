@@ -88,12 +88,12 @@ class ExportEffectWindowController: NSWindowController {
     }
 
     private func fade(_ layer: CALayer, to opacity: Float, within duration: Double = 2.0, completion: (()->Void)? = nil) {
+        //print("\(#function) \(layer) from \(layer.opacity) to \(opacity)")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             NSAnimationContext.runAnimationGroup({(context) in
                 context.allowsImplicitAnimation = true
                 context.duration = duration
                 context.timingFunction = self.timingFunction
-                print("Fade \(layer) from \(layer.opacity) to \(opacity)")
                 layer.opacity = opacity
             }, completionHandler: {
                 completion?()
@@ -138,8 +138,10 @@ class ExportEffectWindowController: NSWindowController {
             width: randomWidth,
             height: layer.frame.height)
         layer.insertSublayer(sub, below: iconLayer)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + (randomSecondDelay)) {
+        
+        // Allow animation to be choppy, it's oldskool anyways :P
+        let queue = DispatchQueue(label:"exportAnimation", qos: .background)
+        queue.asyncAfter(deadline: .now() + (randomSecondDelay)) {
             NSAnimationContext.runAnimationGroup({(context) in
                 context.allowsImplicitAnimation = true
                 context.duration = randomSecondDuration * (1+randomSecondDuration) + 0.4

@@ -10,7 +10,6 @@ import Foundation
 import AppKit
 
 
-
 class ExportEffectWindowController: NSWindowController {
     // MARK: - Public methods
     
@@ -26,10 +25,13 @@ class ExportEffectWindowController: NSWindowController {
     }
     
     // MARK: - Initialization
+    private let iconLayer = CALayer()
+
     init() {
         // Use .windowNibName
         super.init(window:nil)
-        initWindowAsOverlay()
+        initWindowAsHiddenOverlay()
+        addIconLayer()
     }
     
     required init?(coder: NSCoder) {
@@ -40,7 +42,7 @@ class ExportEffectWindowController: NSWindowController {
         return NSNib.Name(rawValue: "ExportEffectWindow")
     }
     
-    private func initWindowAsOverlay() {
+    private func initWindowAsHiddenOverlay() {
         if let window = self.window, let screen = NSScreen.main {
             window.level = NSWindow.Level(rawValue: Int(CGShieldingWindowLevel()) + 1)
             window.isOpaque = false
@@ -49,52 +51,8 @@ class ExportEffectWindowController: NSWindowController {
             window.ignoresMouseEvents = true
             window.setFrame(screen.visibleFrame, display: true, animate: false)
             window.contentView?.wantsLayer = true
-        }
-    }
-    
-    // MARK: - Animation
-    let timingFunction = CAMediaTimingFunction(controlPoints: 0.5, 1.4, 1, 1)
-    
-    func startAnimation() {
-        showIconLayer()
-        linesAnimationTimer = Timer.scheduledTimer(
-            timeInterval: self.linesAnimationInterval,
-            target: self,
-            selector: #selector(animateLinesBurst),
-            userInfo: nil,
-            repeats: true)
-    }
-    
-    func stopAnimation(completion: (()->Void)? = nil) {
-        linesAnimationTimer?.invalidate()
-        hideIconLayer(completion: completion)
-    }
-    
-    // MARK: iconLayer Animation
-    private let iconLayer = CALayer()
-    
-    private func showIconLayer(completion: (()->Void)? = nil) {
-        addIconLayer()
-        fadeIconLayer(to: 1, completion: completion)
-    }
-    
-    private func hideIconLayer(completion: (()->Void)? = nil) {
-        fadeIconLayer(to: 0, within: 1.5, completion: {() -> Void in
-            self.iconLayer.removeFromSuperlayer()
-            completion?()
-        })
-    }
-    
-    private func fadeIconLayer(to: Float, within duration: Double = 2.0, completion: (()->Void)? = nil) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            NSAnimationContext.runAnimationGroup({(context) in
-                context.allowsImplicitAnimation = true
-                context.duration = duration
-                context.timingFunction = self.timingFunction
-                self.iconLayer.opacity = to
-            }, completionHandler: {
-                completion?()
-            })
+            window.contentView?.layer?.opacity = 0
+            window.setIsVisible(false)
         }
     }
     
@@ -107,8 +65,39 @@ class ExportEffectWindowController: NSWindowController {
                 width: image.size.width,
                 height: image.size.height)
             iconLayer.contents = cgImage
-            iconLayer.opacity = 0
             layer.addSublayer(iconLayer)
+        }
+    }
+    
+    // MARK: - Animation
+    let timingFunction = CAMediaTimingFunction(controlPoints: 0.5, 1.4, 1, 1)
+    
+    func startAnimation() {
+        fade((window?.contentView?.layer)!, to: 1)
+        linesAnimationTimer = Timer.scheduledTimer(
+            timeInterval: self.linesAnimationInterval,
+            target: self,
+            selector: #selector(animateLinesBurst),
+            userInfo: nil,
+            repeats: true)
+    }
+    
+    func stopAnimation(completion: (()->Void)? = nil) {
+        linesAnimationTimer?.invalidate()
+        fade((window?.contentView?.layer)!, to: 0, within: 1.0, completion: completion)
+    }
+
+    private func fade(_ layer: CALayer, to opacity: Float, within duration: Double = 2.0, completion: (()->Void)? = nil) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            NSAnimationContext.runAnimationGroup({(context) in
+                context.allowsImplicitAnimation = true
+                context.duration = duration
+                context.timingFunction = self.timingFunction
+                print("Fade \(layer) from \(layer.opacity) to \(opacity)")
+                layer.opacity = opacity
+            }, completionHandler: {
+                completion?()
+            })
         }
     }
     

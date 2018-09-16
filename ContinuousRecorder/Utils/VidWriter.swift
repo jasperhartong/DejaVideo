@@ -142,8 +142,10 @@ class VidWriter {
     private let lineStroke =    CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 0.6)
 
     func newOverlayedPixelBufferFrom(cgImage: CGImage, point: NSPoint, prevPoints: [NSPoint]) -> CVPixelBuffer? {
+        // Setup pxData based on a CVPixelBuffer
         var pxbuffer: CVPixelBuffer?
 
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
         let frameWidth = self.videoSettings[AVVideoWidthKey] as! Int
         let frameHeight = self.videoSettings[AVVideoHeightKey] as! Int
         let options: [String : Any] = [
@@ -159,12 +161,14 @@ class VidWriter {
             options as CFDictionary?,
             &pxbuffer)
         
-        assert(coreVideostatus == kCVReturnSuccess && pxbuffer != nil, "newPixelBuffer failed")
+        guard coreVideostatus == kCVReturnSuccess && pxbuffer != nil else {
+            return nil
+        }
         
         CVPixelBufferLockBaseAddress(pxbuffer!, CVPixelBufferLockFlags(rawValue: 0))
         let pxData = CVPixelBufferGetBaseAddress(pxbuffer!)
-        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
 
+        // Create context and add image and mousepointer
         let context = CGContext(
             data: pxData,
             width: frameWidth,
@@ -205,8 +209,8 @@ class VidWriter {
             }
         }
         
+        // Wrap up pxbuffer
         CVPixelBufferUnlockBaseAddress(pxbuffer!, CVPixelBufferLockFlags(rawValue: 0))
-        
         return pxbuffer
     }
 }

@@ -101,8 +101,7 @@ class VidWriter {
                                     prevPoints = [point2, point1]
                                 }
                             }
-                            sampleBuffer = self.newPixelBufferFrom(
-                                cgImage: self.overlayImage(cgImage:image, point:point, prevPoints: prevPoints))
+                            sampleBuffer = self.newOverlayedPixelBufferFrom(cgImage:image, point:point, prevPoints: prevPoints)
                             
                         }
                     }) // End of autoreleasepool
@@ -142,18 +141,45 @@ class VidWriter {
     private let circleStroke =  CGColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
     private let lineStroke =    CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 0.6)
 
-    func overlayImage(cgImage: CGImage, point: NSPoint, prevPoints: [NSPoint]) -> CGImage {
-        let context = CGContext(data: nil, width: cgImage.width, height: cgImage.height,
-                                bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: 0,
-                                space: cgImage.colorSpace!,
-                                bitmapInfo: cgImage.bitmapInfo.rawValue)
+    func newOverlayedPixelBufferFrom(cgImage: CGImage, point: NSPoint, prevPoints: [NSPoint]) -> CVPixelBuffer? {
+        var pxbuffer: CVPixelBuffer?
+
+        let frameWidth = self.videoSettings[AVVideoWidthKey] as! Int
+        let frameHeight = self.videoSettings[AVVideoHeightKey] as! Int
+        let options: [String : Any] = [
+            kCVPixelBufferCGImageCompatibilityKey as String : true,
+            kCVPixelBufferCGBitmapContextCompatibilityKey as String : true
+        ]
+        
+        let coreVideostatus = CVPixelBufferCreate(
+            kCFAllocatorDefault,
+            frameWidth,
+            frameHeight,
+            kCVPixelFormatType_32ARGB,
+            options as CFDictionary?,
+            &pxbuffer)
+        
+        assert(coreVideostatus == kCVReturnSuccess && pxbuffer != nil, "newPixelBuffer failed")
+        
+        CVPixelBufferLockBaseAddress(pxbuffer!, CVPixelBufferLockFlags(rawValue: 0))
+        let pxData = CVPixelBufferGetBaseAddress(pxbuffer!)
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+
+        let context = CGContext(
+            data: pxData,
+            width: frameWidth,
+            height: frameHeight,
+            bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: CVPixelBufferGetBytesPerRow(pxbuffer!),
+            space: rgbColorSpace,
+            bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue)
+        
         let bounds = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
         let flippedPoint = point.flipped(totalY: cgImage.height)
 
         let pointerRect = CGRect(x: flippedPoint.x-10.0, y: flippedPoint.y-10.0, width: 20.0, height: 20.0)
         if let context = context {
             context.protectGState {
-                // add image
+                // add image: Most heavy method based on profiling
                 context.draw(cgImage, in: bounds)
                 // add circle
                 context.setFillColor(circleFill)
@@ -178,34 +204,7 @@ class VidWriter {
                 
             }
         }
-        if let cgImage = context?.makeImage() {
-            return cgImage
-        } else {
-            return cgImage
-        }
-    }
-    
-    func newPixelBufferFrom(cgImage: CGImage) -> CVPixelBuffer? {
         
-        let options: [String : Any] = [kCVPixelBufferCGImageCompatibilityKey as String : true, kCVPixelBufferCGBitmapContextCompatibilityKey as String : true]
-        
-        var pxbuffer: CVPixelBuffer?
-        
-        let frameWidth = self.videoSettings[AVVideoWidthKey] as! Int
-        let frameHeight = self.videoSettings[AVVideoHeightKey] as! Int
-        
-        let status = CVPixelBufferCreate(kCFAllocatorDefault, frameWidth, frameHeight, kCVPixelFormatType_32ARGB, options as CFDictionary?, &pxbuffer)
-        
-        assert(status == kCVReturnSuccess && pxbuffer != nil, "newPixelBuffer failed")
-        CVPixelBufferLockBaseAddress(pxbuffer!, CVPixelBufferLockFlags(rawValue: 0))
-        let pxData = CVPixelBufferGetBaseAddress(pxbuffer!)
-        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-        let context = CGContext(data: pxData, width: frameWidth, height: frameHeight, bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(pxbuffer!), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue)
-        
-        assert(context != nil, "context is nil")
-        
-        context!.concatenate(CGAffineTransform.identity)
-        context!.draw(cgImage, in: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height))
         CVPixelBufferUnlockBaseAddress(pxbuffer!, CVPixelBufferLockFlags(rawValue: 0))
         
         return pxbuffer

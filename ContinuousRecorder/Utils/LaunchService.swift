@@ -25,19 +25,25 @@ extension Notification.Name {
 
     // MARK: - Properties
     static let shared = LaunchService()
-    @objc dynamic var isEnabled = false
+    private let isEnabledKey = "LaunchService::isEnabled"
+    @objc dynamic var isEnabled = false {
+        didSet {
+            UserDefaults.standard.set(isEnabled, forKey: isEnabledKey)
+        }
+    }
     
     // MARK: -
 
     // Initialization
     private override init() {
         print("Created singleton LaunchService")
+        isEnabled = UserDefaults.standard.bool(forKey: isEnabledKey)
     }
 
     func checkHelper() {
         if helperIsRunning {
             NSLog("\(#function): isRunning")
-            // TODO: Currently we only know whether it launch at login was enabled if it was launched by it at login..
+            // As we were started by the helper, we know for sure that the launcher isEnabled
             isEnabled = true
             // kill the helper that started us
             DistributedNotificationCenter.default.post(name: .killLauncher, object: Bundle.main.bundleIdentifier!)

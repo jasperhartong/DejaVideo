@@ -201,7 +201,7 @@ enum RecordingState: Int {
     
     var exportFragments: [RecordingFragment] = []
     
-    private let stateKey: String = "RecordingState"
+    private let stateKey: String = "ContinuousRecording::state"
     @objc dynamic var state: RecordingState = .idle {
         didSet {
             UserDefaults.standard.set(state.rawValue, forKey: stateKey)

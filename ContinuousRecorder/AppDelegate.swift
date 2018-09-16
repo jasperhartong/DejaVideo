@@ -68,6 +68,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ]
     }
     
+    private func showSplashScreen() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.exportEffectWindowController.show()
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.exportEffectWindowController.hide()
+        }
+    }
+    
     private func createMenu () {
         let menu = NSMenu()
 
@@ -101,6 +111,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: Application Lifecycle
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        if (recording.state == .recording) {
+            showSplashScreen()
+        }
+
         LaunchService.shared.checkHelper()
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)

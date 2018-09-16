@@ -33,14 +33,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var recordingProgressController: RecordingProgressController!
     
     // Secondary Windows
-    let settingsWindowController = SettingsWindowController()
-    let exportEffectWindowController = ExportEffectWindowController()
+    let settingsWindowController: SettingsWindowController
+    let exportEffectWindowController: ExportEffectWindowController
     
     // Starting up the main app
     override init () {
         do {
             recording = try ContinuousRecording()
         } catch { print(error.localizedDescription) }
+
+        settingsWindowController = SettingsWindowController(recording)
+        exportEffectWindowController = ExportEffectWindowController()
 
         // complete init
         super.init()

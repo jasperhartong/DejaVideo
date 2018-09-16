@@ -38,7 +38,7 @@ enum fragmentRecorderError: Error {
 
 struct ContinuousRecordingConfig {
     // How long do we retain recordings for? (seconds)
-    let retention: Double = 120.0
+    let retention: Double = 60.0
     // Config defining in how many files to separate, defines diskspace
     let fragmentInterval: Double = 0.25
 }
@@ -225,6 +225,16 @@ enum RecordingState: Int {
         self.config = config
         super.init(retention: config.retention, interval: config.fragmentInterval)
         recoverState()
+    }
+
+    var fps: Double {
+        return 1/config.fragmentInterval
+    }
+
+    var estimatedRAM: String {
+        let estimatedFrameSize: Double = 7056000.0
+        let total = fps * config.retention * estimatedFrameSize
+        return String(format: "%.1f GB.", total / 1_000_000_000)
     }
     
     func start() {

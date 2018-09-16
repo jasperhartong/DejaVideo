@@ -8,6 +8,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="GeneralSettingsViewController" customModule="ContinuousRecorder" customModuleProvider="target">
             <connections>
                 <outlet property="launchAtLoginCheckbox" destination="fl4-sc-wqv" id="x7J-9v-Ny7"/>
+                <outlet property="recordingSettingsLabel" destination="HJv-ZL-ckz" id="d25-ED-fbN"/>
                 <outlet property="view" destination="c22-O7-iKe" id="vDH-Ax-2DI"/>
             </connections>
         </customObject>
@@ -37,26 +38,22 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="QxL-mY-JaE">
-                    <rect key="frame" x="29" y="207" width="423" height="5"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                </box>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nem-ex-L7r">
-                    <rect key="frame" x="28" y="85" width="434" height="98"/>
+                    <rect key="frame" x="28" y="59" width="434" height="98"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="woc-wI-8od">
                         <font key="font" metaFont="smallSystem"/>
-                        <string key="title">Hello there! As you can see DejaVideo doesn't offer too many options just yet. It currently only exports up to the last 2 minutes with 4fps.  Want more configuration options like video output, fps, cursor styling, video editing options or anything else?  Share your thoughts on:</string>
+                        <string key="title">As you can see DejaVideo doesn't offer too many options just yet.  Want more configuration options like video output, fps, cursor styling, video editing options or anything else?  Share your thoughts on:</string>
                         <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kEB-dD-fRC">
-                    <rect key="frame" x="0.0" y="8" width="480" height="70"/>
+                    <rect key="frame" x="0.0" y="34" width="480" height="46"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <subviews>
                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hRl-X8-ZOp" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
-                            <rect key="frame" x="252" y="38" width="179" height="32"/>
+                            <rect key="frame" x="252" y="14" width="179" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="bevel" title="roadmap.dejavideo.com" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Zdc-gQ-aJ8">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -79,6 +76,19 @@
                         </button>
                     </subviews>
                 </customView>
+                <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="iax-Ke-gWA">
+                    <rect key="frame" x="30" y="182" width="423" height="5"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                </box>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H0r-yT-lrQ">
+                    <rect key="frame" x="27" y="190" width="434" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Currently exports the last minute in 4fps, taking up approximatly 1.6GB" id="HJv-ZL-ckz">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
         </customView>
     </objects>

@@ -12,17 +12,25 @@ import Foundation
 import Cocoa
 
 class GeneralSettingsViewController: NSViewController {
+
     @IBOutlet weak var launchAtLoginCheckbox: NSButton!
     @IBAction func launchAtLoginCheckboxClicked(_ sender: Any) {
         _ = LaunchService.shared.toggleLaunchAtLogin(launchAtLoginCheckbox.state == .on)
         
     }
     
+    @IBOutlet weak var recordingSettingsLabel: NSTextFieldCell!
     @IBAction func roadmapButtonClicked(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://roadmap.dejavideo.com")!)
     }
-    init() {
+    
+    let recording: ContinuousRecording
+
+    init(_ rec: ContinuousRecording) {
+        recording = rec
+
         super.init(nibName: NSNib.Name(rawValue: "GeneralSettingsView"), bundle: nil)
+
         _ = LaunchService.shared.observe(\LaunchService.isEnabled) { _, _ in
             self.updateLaunchAtLoginCheckbox()
         }
@@ -34,6 +42,8 @@ class GeneralSettingsViewController: NSViewController {
     
     override func viewDidLoad() {
         updateLaunchAtLoginCheckbox()
+        // TODO: Also get duration dynamically
+        recordingSettingsLabel.stringValue = "Currently exports the last minute in \(Int(recording.fps))fps, needing approximatly \(recording.estimatedRAM)"
     }
     
     func updateLaunchAtLoginCheckbox() {
@@ -64,7 +74,7 @@ class AboutViewController: NSViewController {
 }
 
 class SettingsWindowController: NSWindowController, NSWindowDelegate, NSToolbarDelegate {
-    private let generalSettingsViewController = GeneralSettingsViewController()
+    private let generalSettingsViewController: GeneralSettingsViewController
     private let aboutViewController = AboutViewController()
     
     // MARK: Outlets
@@ -82,7 +92,9 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSToolbarD
         return NSNib.Name(rawValue: "SettingsWindow")
     }
 
-    init() {
+    init(_ rec: ContinuousRecording) {
+        generalSettingsViewController = GeneralSettingsViewController(rec)
+
         // Use .windowNibName
         super.init(window:nil)
     }

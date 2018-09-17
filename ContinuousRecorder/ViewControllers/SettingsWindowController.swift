@@ -21,7 +21,7 @@ class GeneralSettingsViewController: NSViewController {
     
     @IBOutlet weak var recordingSettingsLabel: NSTextFieldCell!
     @IBAction func roadmapButtonClicked(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://roadmap.dejavideo.app")!)
+        NSWorkspace.shared.open(URL(string: "http://roadmap.dejavideo.app")!)
     }
     
     let recording: ContinuousRecording

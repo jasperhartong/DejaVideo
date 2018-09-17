@@ -5,7 +5,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="GeneralSettingsViewController" customModule="ContinuousRecorder" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="GeneralSettingsViewController" customModule="DejaVideo" customModuleProvider="target">
             <connections>
                 <outlet property="launchAtLoginCheckbox" destination="fl4-sc-wqv" id="x7J-9v-Ny7"/>
                 <outlet property="recordingSettingsLabel" destination="HJv-ZL-ckz" id="d25-ED-fbN"/>
@@ -52,10 +52,10 @@
                     <rect key="frame" x="0.0" y="34" width="480" height="46"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <subviews>
-                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hRl-X8-ZOp" customClass="LayerBackedButton" customModule="ContinuousRecorder" customModuleProvider="target">
+                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hRl-X8-ZOp" customClass="LayerBackedButton" customModule="DejaVideo" customModuleProvider="target">
                             <rect key="frame" x="252" y="14" width="179" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="bevel" title="roadmap.dejavideo.com" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Zdc-gQ-aJ8">
+                            <buttonCell key="cell" type="bevel" title="roadmap.dejavideo.app" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Zdc-gQ-aJ8">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>

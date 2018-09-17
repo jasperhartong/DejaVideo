@@ -68,7 +68,7 @@
 
 /* Begin PBXFileReference section */
 		A4207D51213EDCAB008EB66F /* LayerBackedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerBackedButton.swift; sourceTree = "<group>"; };
-		A42709CA21305DEE000BF7C3 /* ContinuousRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContinuousRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A42709CA21305DEE000BF7C3 /* DejaVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DejaVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A42709CD21305DEE000BF7C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A42709CF21305DEF000BF7C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A42709D221305DEF000BF7C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -153,7 +153,7 @@
 		A42709CB21305DEE000BF7C3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A42709CA21305DEE000BF7C3 /* ContinuousRecorder.app */,
+				A42709CA21305DEE000BF7C3 /* DejaVideo.app */,
 				A42709DA21305DF0000BF7C3 /* ContinuousRecorderTests.xctest */,
 				A4C0248F214C00E400BCE6DA /* LauncherApplication.app */,
 			);
@@ -261,9 +261,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A42709C921305DEE000BF7C3 /* ContinuousRecorder */ = {
+		A42709C921305DEE000BF7C3 /* DejaVideo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A42709E321305DF0000BF7C3 /* Build configuration list for PBXNativeTarget "ContinuousRecorder" */;
+			buildConfigurationList = A42709E321305DF0000BF7C3 /* Build configuration list for PBXNativeTarget "DejaVideo" */;
 			buildPhases = (
 				A42709C621305DEE000BF7C3 /* Sources */,
 				A42709C721305DEE000BF7C3 /* Frameworks */,
@@ -275,9 +275,9 @@
 			dependencies = (
 				A4C024A1214C023E00BCE6DA /* PBXTargetDependency */,
 			);
-			name = ContinuousRecorder;
+			name = DejaVideo;
 			productName = ContinuousRecorder;
-			productReference = A42709CA21305DEE000BF7C3 /* ContinuousRecorder.app */;
+			productReference = A42709CA21305DEE000BF7C3 /* DejaVideo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		A42709D921305DF0000BF7C3 /* ContinuousRecorderTests */ = {
@@ -360,7 +360,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A42709C921305DEE000BF7C3 /* ContinuousRecorder */,
+				A42709C921305DEE000BF7C3 /* DejaVideo */,
 				A42709D921305DF0000BF7C3 /* ContinuousRecorderTests */,
 				A4C0248E214C00E400BCE6DA /* LauncherApplication */,
 			);
@@ -442,7 +442,7 @@
 /* Begin PBXTargetDependency section */
 		A42709DC21305DF0000BF7C3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A42709C921305DEE000BF7C3 /* ContinuousRecorder */;
+			target = A42709C921305DEE000BF7C3 /* DejaVideo */;
 			targetProxy = A42709DB21305DF0000BF7C3 /* PBXContainerItemProxy */;
 		};
 		A4C024A1214C023E00BCE6DA /* PBXTargetDependency */ = {
@@ -713,7 +713,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A42709E321305DF0000BF7C3 /* Build configuration list for PBXNativeTarget "ContinuousRecorder" */ = {
+		A42709E321305DF0000BF7C3 /* Build configuration list for PBXNativeTarget "DejaVideo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A42709E421305DF0000BF7C3 /* Debug */,

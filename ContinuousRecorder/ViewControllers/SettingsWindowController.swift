@@ -42,12 +42,21 @@ class GeneralSettingsViewController: NSViewController {
     
     override func viewDidLoad() {
         updateLaunchAtLoginCheckbox()
-        // TODO: Also get duration dynamically
-        recordingSettingsLabel.stringValue = "Currently exports the last minute in \(Int(recording.fps))fps, needing approximatly \(recording.estimatedRAM)"
+        updateRecordingSettingsLabel()
     }
     
     func updateLaunchAtLoginCheckbox() {
         launchAtLoginCheckbox.state = LaunchService.shared.isEnabled ? .on : .off
+    }
+    
+    func updateRecordingSettingsLabel() {
+        // TODO: Also format the duration in the string dynamically
+        let fps = 1 / recording.config.fragmentInterval
+        let fragmentSize = recording.fragmentSize != nil ? recording.fragmentSize! : 7056000;
+        let estimatedRAM = fps * recording.config.retention * Double(fragmentSize)
+        let estimatedRAMStr: String = String(format: "%.1f GB.", estimatedRAM / 1_000_000_000)
+        
+        recordingSettingsLabel.stringValue = "Records the last minute in \(Int(fps))fps on a scale of \(recording.config.scale) (needing ~\(estimatedRAMStr) RAM)"
     }
     
 }

@@ -40,7 +40,9 @@ struct ContinuousRecordingConfig {
     // How long do we retain recordings for? (seconds)
     let retention: Double = 60.0
     // Config defining in how many files to separate, defines diskspace
-    let fragmentInterval: Double = 0.25
+    let fragmentInterval: Double = 0.33
+    // Config defining the scale in relation to the display
+    let scale: Double = 0.5
 }
 
 class TimeStamped: NSObject {
@@ -51,6 +53,7 @@ class TimeStamped: NSObject {
 class RecordingFragment: TimeStamped {
     private let manager: RecordingFragmentManager
     private let index: Int
+    private let scale: Double
     private let fileNamePrefix = "RecordingFragment"
     private let fileURL: URL
     private var grabFrameTimer: Timer!
@@ -65,25 +68,78 @@ class RecordingFragment: TimeStamped {
         return "RecordingFragment:: \(fileURL)"
     }
     
-    init(_ manager: RecordingFragmentManager, _ index: Int) {
+    init(_ manager: RecordingFragmentManager, _ index: Int, scale: Double = 1.0) {
         self.manager = manager
         self.index = index
+        self.scale = scale
         self.fileURL = NSURL.fileURL(withPathComponents: [
             manager.fragmentDirectory,
             "\(fileNamePrefix)\(manager.sharedUniqueString)\(index).png"
             ])!
-        
-        self.image = CGWindowListCreateImage(  // lower impact than CGDisplayCreateImage(delegate.screenId)
+
+        super.init()
+
+        self.image = scaleImage(CGWindowListCreateImage(  // lower impact than CGDisplayCreateImage(delegate.screenId)
             CGRect.infinite,
             .optionOnScreenOnly,
             kCGNullWindowID,
-            .nominalResolution)
+            .nominalResolution))
         
         let fakeEvent = CGEvent(source: nil)
         if let fakeEvent = fakeEvent {
-            self.mousePoint = fakeEvent.location
+            self.mousePoint = scaleMousePoint(fakeEvent.location)
         }
     }
+    // USE FILTERS: Energy impact: HIGH + ~9 wakes per second..
+//    func scaleImage(_ cgImage: CGImage?) -> CGImage? {
+//        let ciImage = CIImage(cgImage: cgImage!)
+//
+//        let filter = CIFilter(name: "CILanczosScaleTransform")!
+//        filter.setValue(ciImage, forKey: "inputImage")
+//        filter.setValue(0.6, forKey: "inputScale")
+//        filter.setValue(1.0, forKey: "inputAspectRatio")
+//        let outputImage = filter.value(forKey: "outputImage") as! CIImage
+//
+//        let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+//        return context.createCGImage(outputImage, from: outputImage.extent)
+//    }
+    
+    // Use CGContext: Energy impact: LOW + ~9 wakes, 12.3RAM AFTER EXPORT: 26,8MB RAM
+    func scaleImage(_ cgImage: CGImage?) -> CGImage? {
+        guard cgImage != nil && scale != 1.0  else {
+            return cgImage
+        }
+
+        let scaledWidth = Int(Double(cgImage!.width) * scale)
+        let scaledHeight = Int(Double(cgImage!.height) * scale)
+
+        let context: CGContext = CGContext(
+            data: nil,
+            width: scaledWidth,
+            height: scaledHeight,
+            bitsPerComponent: cgImage!.bitsPerComponent,
+            bytesPerRow: cgImage!.bytesPerRow,
+            space: cgImage!.colorSpace!,
+            bitmapInfo: cgImage!.bitmapInfo.rawValue)!
+        
+        // Make me a setting as well
+        context.interpolationQuality = .high
+        
+        context.draw(cgImage!, in: CGRect(x: 0, y: 0, width: scaledWidth, height: scaledHeight))
+        if let scaledImage: CGImage = context.makeImage() {
+            return scaledImage
+        }
+        return cgImage
+    }
+    
+    func scaleMousePoint(_ point: CGPoint?) -> CGPoint? {
+        guard point != nil && scale != 1.0  else {
+            return point
+        }
+        
+        return CGPoint(x: Double(point!.x) * scale, y: Double(point!.y) * scale)
+    }
+
     
     func toPNG() {
         if let image = image, let destination = CGImageDestinationCreateWithURL(fileURL as CFURL, kUTTypePNG, 1, nil){
@@ -104,6 +160,10 @@ class RecordingFragmentManager: TimeStamped {
     
     private let retention: Double
     private let interval: Double
+    private let scale: Double
+    
+    // Memory size: Set on first frame recording
+    var fragmentSize: Int? = nil
     
     @objc private func fragmentTimerFired() {
         nextFragment()
@@ -122,16 +182,22 @@ class RecordingFragmentManager: TimeStamped {
         Initiates a new fragment and appends to recordingFragments
      */
     private func nextFragment() {
-        let next = RecordingFragment(self, nextFragmentCount)
+        let next = RecordingFragment(self, nextFragmentCount, scale: self.scale)
+        
+        if fragmentSize == nil && next.image != nil  {
+           fragmentSize = next.image!.bytesPerRow * next.image!.height
+        }
+        
         recordingFragments.append(next)
         // Keep track of amount of fragments created during complete session
         nextFragmentCount += 1
     }
     
     // MARK: public
-    init(retention: Double, interval: Double) {
+    init(retention: Double, interval: Double, scale: Double) {
         self.retention = retention
         self.interval = interval
+        self.scale = scale
     }
     
     func startFragmentTimer() {
@@ -223,18 +289,8 @@ enum RecordingState: Int {
         ) throws {
         self.screenId = screenId
         self.config = config
-        super.init(retention: config.retention, interval: config.fragmentInterval)
+        super.init(retention: config.retention, interval: config.fragmentInterval, scale: config.scale)
         recoverState()
-    }
-
-    var fps: Double {
-        return 1/config.fragmentInterval
-    }
-
-    var estimatedRAM: String {
-        let estimatedFrameSize: Double = 7056000.0
-        let total = fps * config.retention * estimatedFrameSize
-        return String(format: "%.1f GB.", total / 1_000_000_000)
     }
     
     func start() {

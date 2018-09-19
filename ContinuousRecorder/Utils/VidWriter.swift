@@ -178,6 +178,8 @@ class VidWriter {
             bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue)
         
         let bounds = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
+
+        // PointCircle layout
         let flippedPoint = point.flipped(totalY: cgImage.height)
         let pointerCircleRadius: CGFloat = 6.0
         let pointerCircle = CGRect(
@@ -185,6 +187,15 @@ class VidWriter {
             y: flippedPoint.y-pointerCircleRadius,
             width: pointerCircleRadius*2,
             height: pointerCircleRadius*2)
+
+        // WaterMark layout
+        let waterMarkSize: CGFloat = 30.0
+        let waterMarkPadding: CGFloat = 5.0
+        let watermarkRect = CGRect( // bottom right
+            x: bounds.width - waterMarkSize - waterMarkPadding,
+            y: waterMarkPadding,
+            width: waterMarkSize,
+            height: waterMarkSize)
         
         if let context = context {
             context.protectGState {
@@ -197,7 +208,7 @@ class VidWriter {
                 context.setStrokeColor(circleStroke)
                 context.setLineWidth(3.0)
                 context.strokeEllipse(in: pointerCircle)
-                // add line
+                // add trailing line
                 if !prevPoints.isEmpty {
                     var flippedPrevPoints = prevPoints.map {$0.flipped(totalY: cgImage.height)}
                     flippedPrevPoints.append(flippedPoint)
@@ -209,6 +220,10 @@ class VidWriter {
                     path.addLines(between: flippedPrevPoints)
                     context.addPath(path)
                     context.strokePath()
+                }
+                // add watermark
+                if let image = NSApp.applicationIconImage, let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+                    context.draw(cgImage, in: watermarkRect)
                 }
                 
             }

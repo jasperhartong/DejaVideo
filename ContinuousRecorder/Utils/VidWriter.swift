@@ -179,19 +179,24 @@ class VidWriter {
         
         let bounds = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
         let flippedPoint = point.flipped(totalY: cgImage.height)
-
-        let pointerRect = CGRect(x: flippedPoint.x-10.0, y: flippedPoint.y-10.0, width: 20.0, height: 20.0)
+        let pointerCircleRadius: CGFloat = 6.0
+        let pointerCircle = CGRect(
+            x: flippedPoint.x-pointerCircleRadius,
+            y: flippedPoint.y-pointerCircleRadius,
+            width: pointerCircleRadius*2,
+            height: pointerCircleRadius*2)
+        
         if let context = context {
             context.protectGState {
                 // add image: Most heavy method based on profiling
                 context.draw(cgImage, in: bounds)
                 // add circle
                 context.setFillColor(circleFill)
-                context.fillEllipse(in: pointerRect)
+                context.fillEllipse(in: pointerCircle)
                 // add circle stroke
                 context.setStrokeColor(circleStroke)
-                context.setLineWidth(6.0)
-                context.strokeEllipse(in: pointerRect)
+                context.setLineWidth(3.0)
+                context.strokeEllipse(in: pointerCircle)
                 // add line
                 if !prevPoints.isEmpty {
                     var flippedPrevPoints = prevPoints.map {$0.flipped(totalY: cgImage.height)}

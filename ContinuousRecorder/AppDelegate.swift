@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let itemProgress: NSMenuItem = NSMenuItem()
     private let itemMenuSeparator: NSMenuItem = NSMenuItem.separator()
     private let itemSettings: NSMenuItem = NSMenuItem(
-        title: "Settings", action: #selector(AppDelegate.settings), keyEquivalent: "")
+        title: "Settings", action: #selector(AppDelegate.openSettings), keyEquivalent: "")
     private let itemQuit: NSMenuItem = NSMenuItem(
         title: "Quit", action: #selector(AppDelegate.quit), keyEquivalent: "")
     
@@ -27,7 +27,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let menuImageIdle: NSImage = NSImage(named: NSImage.Name(rawValue: "menu-image-idle"))!
     private let menuImageRecording: NSImage = NSImage(named: NSImage.Name(rawValue: "menu-image-recording"))!
     private let menuImageExporting: NSImage = NSImage(named: NSImage.Name(rawValue: "menu-image-exporting"))!
-    //    private let progressTimer: Timer // TODO: Add timer to update for progress
     
     // Embedded recording progress view
     var recordingProgressController: RecordingProgressController!
@@ -71,16 +70,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ]
     }
     
-    private func showSplashScreen() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.exportEffectWindowController.show()
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            self.exportEffectWindowController.hide()
-        }
-    }
-    
     private func createMenu () {
         let menu = NSMenu()
 
@@ -114,10 +103,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: Application Lifecycle
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        if (recording.state == .recording) {
-            showSplashScreen()
-        }
-
+        // shut down helper app if started on launch
         LaunchService.shared.checkHelper()
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -126,6 +112,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         createMenu()
         updateMenuImage()
+        
+        if (recording.state == .recording) {
+            exportEffectWindowController.showFor(seconds:3.0)
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -133,7 +123,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     // MARK: Menu actions
-    @objc func settings() {
+    @objc func openSettings() {
         settingsWindowController.window?.setIsVisible(true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             // Delay ensures correct becomeMain() behavior when the settingswindow was already opened before

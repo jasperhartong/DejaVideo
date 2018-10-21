@@ -24,6 +24,18 @@ class ExportEffectWindowController: NSWindowController {
         })
     }
     
+    func showFor(seconds: TimeInterval) {
+        // Needs explicit delay so it's not performed immediatly in sync
+        let explicitDelay: TimeInterval = 0.1
+        DispatchQueue.main.asyncAfter(deadline: .now() + explicitDelay) {
+            self.show()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + explicitDelay + seconds) {
+            self.hide()
+        }
+    }
+    
     // MARK: - Initialization
     private let iconLayer = CALayer()
 
@@ -43,7 +55,8 @@ class ExportEffectWindowController: NSWindowController {
     }
     
     private func initWindowAsHiddenOverlay() {
-        if let window = self.window, let screen = NSScreen.main {
+        let screenWithMenuBar = NSScreen.screens.first
+        if let window = self.window, let screen = screenWithMenuBar {
             window.level = NSWindow.Level(rawValue: Int(CGShieldingWindowLevel()) + 1)
             window.isOpaque = false
             window.collectionBehavior = .canJoinAllSpaces
@@ -57,7 +70,8 @@ class ExportEffectWindowController: NSWindowController {
     }
     
     private func addIconLayer() {
-        if let layer = window?.contentView?.layer, let image = NSApp.applicationIconImage, let screen = NSScreen.main {
+        let screenWithMenuBar = NSScreen.screens.first
+        if let layer = window?.contentView?.layer, let image = NSApp.applicationIconImage, let screen = screenWithMenuBar {
             let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil)
             iconLayer.frame = CGRect(
                 x: NSMidX(screen.frame) - (image.size.width/2),
@@ -157,7 +171,7 @@ class ExportEffectWindowController: NSWindowController {
             height: height)
         layer.insertSublayer(sub, below: iconLayer)
         
-        // Allow animation to be choppy, it's oldskool anyways :P
+        // Allow animation to be choppy by setting low qos, it's oldskool anyways :P
         let queue = DispatchQueue(label:"exportAnimation", qos: .background)
         queue.asyncAfter(deadline: .now() + (randomSecondDelay)) {
             NSAnimationContext.runAnimationGroup({(context) in

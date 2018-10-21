@@ -78,17 +78,23 @@ class RecordingFragment: TimeStamped {
             ])!
 
         super.init()
-
-        self.image = scaleImage(CGWindowListCreateImage(  // lower impact than CGDisplayCreateImage(delegate.screenId)
-            CGRect.infinite,
-            .optionOnScreenOnly,
-            kCGNullWindowID,
-            .nominalResolution))
         
-        let fakeEvent = CGEvent(source: nil)
-        if let fakeEvent = fakeEvent {
-            self.mousePoint = scaleMousePoint(fakeEvent.location)
+        // Only record the display with menu bar
+        let activeDisplay = UnsafeMutablePointer<CGDirectDisplayID>.allocate(capacity: 1)
+        CGGetActiveDisplayList(1, activeDisplay, nil)
+        if let screenWithMenuBarId = Array(UnsafeBufferPointer(start: activeDisplay, count: 1)).first {
+            self.image = scaleImage(CGWindowListCreateImage(  // lower impact than CGDisplayCreateImage(delegate.screenId)
+                CGDisplayBounds(screenWithMenuBarId),
+                .optionOnScreenOnly,
+                kCGNullWindowID,
+                .nominalResolution))
+            
+            let fakeEvent = CGEvent(source: nil)
+            if let fakeEvent = fakeEvent {
+                self.mousePoint = scaleMousePoint(fakeEvent.location)
+            }
         }
+        
     }
     // USE FILTERS: Energy impact: HIGH + ~9 wakes per second..
 //    func scaleImage(_ cgImage: CGImage?) -> CGImage? {
@@ -262,7 +268,6 @@ enum RecordingState: Int {
 
 
 @objcMembers class ContinuousRecording: RecordingFragmentManager {
-    let screenId: CGDirectDisplayID
     let config: ContinuousRecordingConfig
     
     var exportFragments: [RecordingFragment] = []
@@ -284,10 +289,8 @@ enum RecordingState: Int {
     }
     
     init(
-        screenId: CGDirectDisplayID = CGMainDisplayID(),
         config: ContinuousRecordingConfig = ContinuousRecordingConfig()
         ) throws {
-        self.screenId = screenId
         self.config = config
         super.init(retention: config.retention, interval: config.fragmentInterval, scale: config.scale)
         recoverState()

@@ -137,7 +137,8 @@ class VidWriter {
         }
     }
     
-    private let circleFill =    CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 1.0)
+    private let background =    CGColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+    private let circleFill =    CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 0.95)
     private let circleStroke =  CGColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
     private let lineStroke =    CGColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 0.6)
 
@@ -199,6 +200,9 @@ class VidWriter {
         
         if let context = context {
             context.protectGState {
+                // add background (in case the movie contains multiple screen resolutions)
+                context.setFillColor(background)
+                context.fill(CGRect(x:0, y:0, width: frameWidth, height: frameHeight))
                 // add image: Most heavy method based on profiling
                 context.draw(cgImage, in: bounds)
                 // add circle

@@ -343,11 +343,21 @@ enum RecordingState: Int {
             completion(nil, fragmentRecorderError.couldNotExport)
             return
         }
-        guard let anImage = self.exportFragments.first?.image else {
+        // Calculate maximum recorded screen size
+        var width = 0
+        var height = 0
+        for fragment in self.exportFragments {
+            if let image = fragment.image {
+                width = image.width > width ? image.width : width
+                height = image.height > height ? image.height : height
+            }
+        }
+        if width == 0 || height == 0 {
             _ = cancelExport()
             completion(nil, fragmentRecorderError.couldNotExport)
             return
         }
+
         state = .exporting
         
         
@@ -357,8 +367,8 @@ enum RecordingState: Int {
         queue.async {
             let settings = VidWriter.videoSettings(
                 codec: AVVideoCodecType.h264,
-                width: anImage.width,
-                height: anImage.height)
+                width: width,
+                height:height)
 
             // Note: Currently we always overwrite the destination by first deleting it
             // TODO: Add more error cases? Like when writing fails?

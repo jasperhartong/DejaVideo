@@ -24,6 +24,11 @@ class GeneralSettingsViewController: NSViewController {
         NSWorkspace.shared.open(URL(string: "http://roadmap.dejavideo.app")!)
     }
     
+    @IBAction func systemPreferencesButtonClicked(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.display")!)
+    }
+    
+    
     let recording: ContinuousRecording
 
     init(_ rec: ContinuousRecording) {
@@ -56,18 +61,32 @@ class GeneralSettingsViewController: NSViewController {
         let estimatedRAM = fps * recording.config.retention * Double(fragmentSize)
         let estimatedRAMStr: String = String(format: "%.1f GB.", estimatedRAM / 1_000_000_000)
         
-        recordingSettingsLabel.stringValue = "Records the last minute in \(Int(fps))fps on a scale of \(recording.config.scale) (needing ~\(estimatedRAMStr) RAM)"
+        recordingSettingsLabel.stringValue = "DejaVideo records the last minute in \(Int(fps))fps on a \(recording.config.scale) scale (~\(estimatedRAMStr) RAM). Currently it only records the display that holds the menubar."
     }
     
 }
 
 class AboutViewController: NSViewController {
+    private let version: String
+    private let build: String
+
     @IBOutlet weak var versionLabel: NSTextFieldCell!
     
     @IBAction func twitterButtonClicked(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://twitter.com/jasperhartong")!)
     }
+    
+    @IBAction func websiteButtonClicked(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://dejavideo.app/#v=\(version)")!)
+    }
     init() {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            self.version = "\(version)"
+            self.build = "\(build)"
+        } else {
+            self.version = "unknown"
+            self.build = "unknown"
+        }
         super.init(nibName: NSNib.Name(rawValue: "AboutView"), bundle: nil)
     }
     
@@ -76,9 +95,7 @@ class AboutViewController: NSViewController {
     }
     
     override func viewDidLoad() {
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            self.versionLabel.stringValue = "v\(version) - build: \(build)"
-        }
+        versionLabel.stringValue = "v\(version) - build: \(build)"
     }
 }
 
@@ -114,6 +131,7 @@ class SettingsWindowController: NSWindowController, NSWindowDelegate, NSToolbarD
         self.window?.toolbar?.delegate = self
         // ensure the settings window is on top
         self.window?.level = .floating
+        self.window?.styleMask.remove(.resizable)
         NSApp.activate(ignoringOtherApps: true)
         // Set initial tab
         activateTabGeneral(self)

@@ -11,6 +11,8 @@ import AppKit
 
 
 class ExportEffectWindowController: NSWindowController {
+    @objc var recording: ContinuousRecording!
+    private var observers = [NSKeyValueObservation]()
     // MARK: - Public methods
     
     func show() {
@@ -39,11 +41,28 @@ class ExportEffectWindowController: NSWindowController {
     // MARK: - Initialization
     private let iconLayer = CALayer()
 
-    init() {
-        // Use .windowNibName
+    init(_ recording: ContinuousRecording) {
+        self.recording = recording
+
+        // settings window:nil will let super use .windowNibName
         super.init(window:nil)
+
         initWindowAsHiddenOverlay()
         addIconLayer()
+        observeRecording()
+    }
+    
+    private func observeRecording() {
+        observers = [
+            self.recording.observe(\ContinuousRecording.state) { recording, observedChange in
+                switch recording.state {
+                case .idle, .recording, .preppedExport:
+                    self.hide()
+                case .exporting:
+                    self.show()
+                }
+            }
+        ]
     }
     
     required init?(coder: NSCoder) {

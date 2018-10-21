@@ -15,6 +15,7 @@
 		A42709EB213061D3000BF7C3 /* ContinuousRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */; };
 		A484777B214E5A3D00CDE971 /* ExportEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A484777A214E5A3D00CDE971 /* ExportEffectWindow.xib */; };
 		A484777D214E5A6200CDE971 /* ExportEffectWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A484777C214E5A6200CDE971 /* ExportEffectWindowController.swift */; };
+		A49BF90A217C774F006D6ED4 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49BF909217C774F006D6ED4 /* MenuBarController.swift */; };
 		A4A93A80214804B000FA4158 /* GeneralSettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A93A7F214804B000FA4158 /* GeneralSettingsView.xib */; };
 		A4A93A822148090200FA4158 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4A93A812148090200FA4158 /* AboutView.xib */; };
 		A4C02492214C00E400BCE6DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C02491214C00E400BCE6DA /* AppDelegate.swift */; };
@@ -80,6 +81,7 @@
 		A42709EA213061D3000BF7C3 /* ContinuousRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousRecorder.swift; sourceTree = "<group>"; };
 		A484777A214E5A3D00CDE971 /* ExportEffectWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExportEffectWindow.xib; sourceTree = "<group>"; };
 		A484777C214E5A6200CDE971 /* ExportEffectWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportEffectWindowController.swift; sourceTree = "<group>"; };
+		A49BF909217C774F006D6ED4 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
 		A4A66A6C214C108800F06D3F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A4A93A7F214804B000FA4158 /* GeneralSettingsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GeneralSettingsView.xib; sourceTree = "<group>"; };
 		A4A93A812148090200FA4158 /* AboutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				A4C0F1FC21381D1700BF2215 /* RecordingProgressController.swift */,
 				A4CD54DA213E66F000F191E2 /* SettingsWindowController.swift */,
 				A484777C214E5A6200CDE971 /* ExportEffectWindowController.swift */,
+				A49BF909217C774F006D6ED4 /* MenuBarController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 				A4F09C1621370D370062753D /* RepeatingBackgroundTimer.swift in Sources */,
 				A4CD54D8213ACE3400F191E2 /* NSpoint+flipped.swift in Sources */,
 				A4F09C1421370B740062753D /* VidWriter.swift in Sources */,
+				A49BF90A217C774F006D6ED4 /* MenuBarController.swift in Sources */,
 				A4207D52213EDCAB008EB66F /* LayerBackedButton.swift in Sources */,
 				A4C0F1FD21381D1700BF2215 /* RecordingProgressController.swift in Sources */,
 				A4DF2FD5214C07040015F4FD /* LaunchService.swift in Sources */,

@@ -7,11 +7,14 @@
 //
 
 import Cocoa
+import CoreGraphics
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     // Main recording object to inject into controllers
     @objc var recording: ContinuousRecording!
+    // To keep track of main screen (== withMenuBar)
+    private var currentMainScreenID: CGDirectDisplayID?
 
     // Menu bar
     let menuBarController: MenuBarController
@@ -24,6 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     override init () {
         do {
             recording = try ContinuousRecording()
+            currentMainScreenID = CGDirectDisplayID.withMenuBar
         } catch { print(error.localizedDescription) }
         
         settingsWindowController = SettingsWindowController(recording)
@@ -36,6 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Quit if no recording (can only be done after completing init)
         if recording == nil { NSApplication.shared.terminate(self) }
         
+        observeMainScreenChanges()
     }
 
     // MARK: Application Lifecycle
@@ -43,14 +48,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // shut down helper app if started on launch
         LaunchService.shared.checkHelper()
         
-        if (recording.state == .recording) {
-            exportEffectWindowController.showFor(seconds:3.0)
-        }
+        // Show a nice animation upon launch
+        showSplashIfRecording()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
-
+    
+    // MARK: Private
+    private func observeMainScreenChanges() {
+        // Signal the user which screen is recording upon "main" display changes
+        NotificationCenter.default.addObserver(
+            forName: NSApplication.didChangeScreenParametersNotification,
+            object: NSApplication.shared,
+            queue: OperationQueue.main) {
+                notification -> Void in
+                if self.currentMainScreenID != CGDirectDisplayID.withMenuBar {
+                    self.currentMainScreenID = CGDirectDisplayID.withMenuBar
+                    self.showSplashIfRecording()
+                }
+        }
+    }
+    
+    private func showSplashIfRecording() {
+        if (recording.state == .recording) {
+            exportEffectWindowController.showFor(seconds:2.0, delay: 1.0)
+        }
+    }
 }
 

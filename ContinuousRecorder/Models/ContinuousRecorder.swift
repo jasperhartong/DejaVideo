@@ -78,11 +78,9 @@ class RecordingFragment: TimeStamped {
             ])!
 
         super.init()
-        
+
         // Only record the display with menu bar
-        let activeDisplay = UnsafeMutablePointer<CGDirectDisplayID>.allocate(capacity: 1)
-        CGGetActiveDisplayList(1, activeDisplay, nil)
-        if let screenWithMenuBarId = Array(UnsafeBufferPointer(start: activeDisplay, count: 1)).first {
+        if let screenWithMenuBarId = CGDirectDisplayID.withMenuBar {
             self.image = scaleImage(CGWindowListCreateImage(  // lower impact than CGDisplayCreateImage(delegate.screenId)
                 CGDisplayBounds(screenWithMenuBarId),
                 .optionOnScreenOnly,
@@ -162,7 +160,7 @@ class RecordingFragmentManager: TimeStamped {
     
     var recordingFragments: [RecordingFragment] = []
     var nextFragmentCount = 0
-    @objc dynamic var isRecording: Bool = false
+    var isRecording: Bool = false
     
     private let retention: Double
     private let interval: Double

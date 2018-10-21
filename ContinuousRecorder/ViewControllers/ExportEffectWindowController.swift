@@ -16,6 +16,7 @@ class ExportEffectWindowController: NSWindowController {
     // MARK: - Public methods
     
     func show() {
+        resizeLayers()
         window?.setIsVisible(true)
         startAnimation()
     }
@@ -26,14 +27,13 @@ class ExportEffectWindowController: NSWindowController {
         })
     }
     
-    func showFor(seconds: TimeInterval) {
-        // Needs explicit delay so it's not performed immediatly in sync
-        let explicitDelay: TimeInterval = 0.1
-        DispatchQueue.main.asyncAfter(deadline: .now() + explicitDelay) {
+    func showFor(seconds: TimeInterval, delay: TimeInterval = 0.1) {
+        // Always needs an explicit delay so it's not performed immediatly in sync
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             self.show()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + explicitDelay + seconds) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay + seconds) {
             self.hide()
         }
     }
@@ -74,14 +74,12 @@ class ExportEffectWindowController: NSWindowController {
     }
     
     private func initWindowAsHiddenOverlay() {
-        let screenWithMenuBar = NSScreen.screens.first
-        if let window = self.window, let screen = screenWithMenuBar {
+        if let window = self.window {
             window.level = NSWindow.Level(rawValue: Int(CGShieldingWindowLevel()) + 1)
             window.isOpaque = false
             window.collectionBehavior = .canJoinAllSpaces
             window.backgroundColor = NSColor(red: 1, green: 0.5, blue: 0.5, alpha: 0.0)
             window.ignoresMouseEvents = true
-            window.setFrame(screen.visibleFrame, display: true, animate: false)
             window.contentView?.wantsLayer = true
             window.contentView?.layer?.opacity = 0
             window.setIsVisible(false)
@@ -89,16 +87,24 @@ class ExportEffectWindowController: NSWindowController {
     }
     
     private func addIconLayer() {
-        let screenWithMenuBar = NSScreen.screens.first
-        if let layer = window?.contentView?.layer, let image = NSApp.applicationIconImage, let screen = screenWithMenuBar {
+        if let layer = window?.contentView?.layer, let image = NSApp.applicationIconImage {
             let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil)
+            iconLayer.contents = cgImage
+            layer.addSublayer(iconLayer)
+        }
+        resizeLayers()
+    }
+    
+    private func resizeLayers() {
+        let screenWithMenuBar = NSScreen.screens.first
+        if let window = self.window, let image = NSApp.applicationIconImage, let screen = screenWithMenuBar {
             iconLayer.frame = CGRect(
                 x: NSMidX(screen.frame) - (image.size.width/2),
                 y: NSMidY(screen.frame) - (image.size.height/2),
                 width: image.size.width,
                 height: image.size.height)
-            iconLayer.contents = cgImage
-            layer.addSublayer(iconLayer)
+
+            window.setFrame(screen.visibleFrame, display: true, animate: false)
         }
     }
     

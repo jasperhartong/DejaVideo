@@ -69,7 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 notification -> Void in
                 if self.currentMainScreenID != CGDirectDisplayID.withMenuBar {
                     self.currentMainScreenID = CGDirectDisplayID.withMenuBar
-                    self.showSplashIfRecording()
+                    NSLog("Recorded screen changed to \(String(describing: self.currentMainScreenID))")
                 }
         }
     }

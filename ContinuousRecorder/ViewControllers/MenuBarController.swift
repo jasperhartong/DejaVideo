@@ -16,6 +16,7 @@ import Foundation
     private var observers = [NSKeyValueObservation]()
     
     private var statusItem : NSStatusItem? = nil
+    private var progressTimer: Timer!
     
     // menu items
     private let itemProgress: NSMenuItem = NSMenuItem()
@@ -49,20 +50,24 @@ import Foundation
         
         
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+
         // TODO: For now don't highlight the menu so the menu images show nice
         statusItem?.highlightMode = false
+
         
         createMenu()
-        updateMenuImage()
         
         // Set up observers
         observeRecording()
     }
     
     private func observeRecording() {
+        // Call listeners also on init
+        updateMenu()
+
         observers = [
             self.recording.observe(\ContinuousRecording.state) { recording, observedChange in
-                self.updateMenuImage()
+                self.updateMenu()
             }
         ]
     }
@@ -83,16 +88,68 @@ import Foundation
         statusItem?.menu = menu
     }
     
-    private func updateMenuImage() {
+    private func setStyledMenuTitle(_ title: String) {
+        let pstyle = NSMutableParagraphStyle()
+        pstyle.alignment = .left
+        pstyle.firstLineHeadIndent = 4
+
+        let shadow = NSShadow()
+        shadow.shadowOffset = NSSize(width: -1, height: 1)
+        // Base shadow color on textBackgroundColor so it works in dark OS theme as well
+        shadow.shadowColor = NSColor.textBackgroundColor
+        shadow.shadowBlurRadius = 0
+        
+        
+        statusItem?.button?.attributedTitle = NSMutableAttributedString(
+            string: title,
+            attributes: [
+                NSAttributedStringKey.font: NSFont.monospacedDigitSystemFont(
+                    ofSize: NSFont.labelFontSize,
+                    weight: NSFont.Weight.bold
+                ),
+                NSAttributedStringKey.shadow: shadow,
+                NSAttributedStringKey.paragraphStyle: pstyle,
+                NSAttributedStringKey.baselineOffset: -4,
+            ])
+    }
+    
+    @objc private func setRecordingMenuTitle() {
+        let fragmentCount: Double = Double(recording.fragmentCount)
+        let fragmentInterval: Double = Double(recording.config.fragmentInterval)
+        let exportableSeconds: Double = fragmentCount * fragmentInterval
+        // show up until the last second
+        if (exportableSeconds == 0 || recording.config.retention - 1 <= exportableSeconds) {
+            setStyledMenuTitle("")
+        } else {
+            setStyledMenuTitle(String(format: "%02d", Int(exportableSeconds)))
+        }
+    }
+    
+    private func updateMenu() {
         switch recording.state {
         case .idle:
-            statusItem?.image = menuImageIdle
+            if let timer = progressTimer {
+                timer.invalidate()
+            }
+            statusItem?.button?.image = menuImageIdle
+            setStyledMenuTitle("")
         case .recording:
-            statusItem?.image = menuImageRecording
+            statusItem?.button?.image = menuImageRecording
+            setRecordingMenuTitle()
+            progressTimer = Timer.scheduledTimer(
+                timeInterval: recording.config.fragmentInterval,
+                target: self,
+                selector: #selector(setRecordingMenuTitle),
+                userInfo: nil,
+                repeats: true)
+            // Make sure it updates when the menu is open
+            RunLoop.main.add(progressTimer, forMode: .commonModes)
         case .preppedExport:
-            statusItem?.image = menuImageExporting
+            setStyledMenuTitle("")
+            statusItem?.button?.image = menuImageRecording
         case .exporting:
-            statusItem?.image = menuImageExporting
+            setStyledMenuTitle("")
+            statusItem?.button?.image = menuImageExporting
         }
     }
     

@@ -8,30 +8,24 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GeneralSettingsViewController" customModule="DejaVideo" customModuleProvider="target">
             <connections>
+                <outlet property="LastImageFragment" destination="yos-CQ-b3R" id="UTP-tg-SXa"/>
+                <outlet property="fpsControl" destination="TLg-rd-VFC" id="DB6-yt-eZG"/>
+                <outlet property="lastImageFragment" destination="yos-CQ-b3R" id="ddU-UM-0Mc"/>
                 <outlet property="launchAtLoginCheckbox" destination="fl4-sc-wqv" id="x7J-9v-Ny7"/>
                 <outlet property="recordingSettingsLabel" destination="HJv-ZL-ckz" id="d25-ED-fbN"/>
+                <outlet property="retentionControl" destination="5P5-kq-Bkn" id="K1k-3o-H9K"/>
+                <outlet property="scaleControl" destination="5aC-It-MyB" id="VQN-5h-Bxh"/>
                 <outlet property="view" destination="c22-O7-iKe" id="vDH-Ax-2DI"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe">
-            <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+            <rect key="frame" x="0.0" y="0.0" width="480" height="400"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fl4-sc-wqv">
-                    <rect key="frame" x="169" y="229" width="169" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Start DejaVideo at Login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="snT-KB-DLA">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="systemPreferencesButtonClicked:" target="-2" id="rdY-bF-GM1"/>
-                    </connections>
-                </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XrJ-uN-clh">
-                    <rect key="frame" x="112" y="230" width="53" height="17"/>
+                    <rect key="frame" x="123" y="74" width="53" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Startup:" id="jaL-pk-dCw">
                         <font key="font" metaFont="system"/>
@@ -39,46 +33,8 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nem-ex-L7r">
-                    <rect key="frame" x="28" y="6" width="434" height="98"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="woc-wI-8od">
-                        <font key="font" metaFont="smallSystem"/>
-                        <string key="title">Want more configuration options like video output, fps, cursor styling, video editing options, multiple screen recordings or anything else?  Share your thoughts on:</string>
-                        <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kEB-dD-fRC">
-                    <rect key="frame" x="0.0" y="6" width="480" height="46"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <subviews>
-                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hRl-X8-ZOp" customClass="LayerBackedButton" customModule="DejaVideo" customModuleProvider="target">
-                            <rect key="frame" x="274" y="13" width="179" height="32"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="bevel" title="roadmap.dejavideo.app" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Zdc-gQ-aJ8">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
-                                    <color key="value" red="0.87843137250000003" green="0.0" blue="0.49803921569999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="color" keyPath="textColor">
-                                    <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="color" keyPath="textColorSelected">
-                                    <color key="value" red="0.54881922149999995" green="0.0" blue="0.31670669730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="systemPreferencesButtonClicked:" target="-2" id="jRb-Zv-bd8"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                </customView>
                 <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EmO-Bj-eqh">
-                    <rect key="frame" x="160" y="177" width="320" height="46"/>
+                    <rect key="frame" x="171" y="135" width="320" height="46"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <subviews>
                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VZo-Nt-JjI" customClass="LayerBackedButton" customModule="DejaVideo" customModuleProvider="target">
@@ -100,22 +56,13 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="systemPreferencesButtonClicked:" target="-2" id="1dS-Uk-tQm"/>
+                                <action selector="systemPreferencesButtonClicked:" target="-2" id="QJR-uJ-7xN"/>
                             </connections>
                         </button>
                     </subviews>
                 </customView>
-                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H0r-yT-lrQ">
-                    <rect key="frame" x="28" y="140" width="434" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="DejaVideo exports the last minute in 4fps, taking up approximatly 1.6GB Currently only records the display with menubar." id="HJv-ZL-ckz">
-                        <font key="font" metaFont="smallSystem"/>
-                        <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oJY-ly-A0r">
-                    <rect key="frame" x="80" y="191" width="85" height="17"/>
+                    <rect key="frame" x="91" y="149" width="85" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Main Display:" id="Sf8-Nf-cGm">
                         <font key="font" metaFont="system"/>
@@ -124,10 +71,165 @@
                     </textFieldCell>
                 </textField>
                 <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="iax-Ke-gWA">
-                    <rect key="frame" x="29" y="122" width="423" height="5"/>
+                    <rect key="frame" x="29" y="105" width="423" height="5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                 </box>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nyh-zd-FDd">
+                    <rect key="frame" x="29" y="257" width="133" height="123"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageAlignment="top" imageScaling="proportionallyDown" id="yos-CQ-b3R"/>
+                    <color key="contentTintColor" name="windowFrameColor" catalog="System" colorSpace="catalog"/>
+                </imageView>
+                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5aC-It-MyB">
+                    <rect key="frame" x="183" y="336" width="195" height="24"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="x6u-rn-tAe">
+                        <font key="font" metaFont="system"/>
+                        <segments>
+                            <segment label="0.25"/>
+                            <segment label="0.5" selected="YES" tag="1"/>
+                            <segment label="0.75"/>
+                            <segment label="1.0"/>
+                        </segments>
+                    </segmentedCell>
+                    <connections>
+                        <action selector="scaleControlClicked:" target="-2" id="UOr-OP-cNt"/>
+                    </connections>
+                </segmentedControl>
+                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TLg-rd-VFC">
+                    <rect key="frame" x="183" y="283" width="169" height="24"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="zm9-hx-7AO">
+                        <font key="font" metaFont="system"/>
+                        <segments>
+                            <segment label="1"/>
+                            <segment label="2" selected="YES" tag="1"/>
+                            <segment label="3"/>
+                            <segment label="4"/>
+                            <segment label="5"/>
+                        </segments>
+                    </segmentedCell>
+                    <connections>
+                        <action selector="fpsControlClicked:" target="-2" id="eK6-BU-74r"/>
+                    </connections>
+                </segmentedControl>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D2Y-Tr-VL6">
+                    <rect key="frame" x="184" y="363" width="49" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Scaling" id="f5Q-aL-Wbx">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="5uA-fh-M2A">
+                    <rect key="frame" x="28" y="193" width="423" height="5"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                </box>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LJB-kl-IRg">
+                    <rect key="frame" x="183" y="311" width="121" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Frames per second" id="qWP-Q2-uv9">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vYH-fD-RMx">
+                    <rect key="frame" x="183" y="116" width="376" height="25"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="DejaVideo only records the display with menubar" id="lJx-Fs-YMP">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H0r-yT-lrQ">
+                    <rect key="frame" x="183" y="193" width="279" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Approximate RAM usage: 1.6GB" id="HJv-ZL-ckz">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5P5-kq-Bkn">
+                    <rect key="frame" x="183" y="231" width="135" height="24"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="TDq-gy-fct">
+                        <font key="font" metaFont="system"/>
+                        <segments>
+                            <segment label="30"/>
+                            <segment label="60" selected="YES" tag="1"/>
+                            <segment label="120"/>
+                        </segments>
+                    </segmentedCell>
+                    <connections>
+                        <action selector="retentionControlClicked:" target="-2" id="lPO-xy-INe"/>
+                    </connections>
+                </segmentedControl>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hwz-De-dSA">
+                    <rect key="frame" x="183" y="258" width="116" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Seconds to record" id="tng-Qg-Uie">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fl4-sc-wqv">
+                    <rect key="frame" x="184" y="73" width="169" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Start DejaVideo at Login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="snT-KB-DLA">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="launchAtLoginCheckboxClicked:" target="-2" id="t3I-ee-QN1"/>
+                    </connections>
+                </button>
             </subviews>
+            <point key="canvasLocation" x="139" y="90"/>
+        </customView>
+        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="nem-ex-L7r">
+            <rect key="frame" x="0.0" y="0.0" width="434" height="98"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="woc-wI-8od">
+                <font key="font" metaFont="smallSystem"/>
+                <string key="title">Want more configuration options like video output, fps, cursor styling, video editing options, multiple screen recordings or anything else?  Share your thoughts on:</string>
+                <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+            </textFieldCell>
+            <point key="canvasLocation" x="147" y="380"/>
+        </textField>
+        <customView id="kEB-dD-fRC">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="46"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hRl-X8-ZOp" customClass="LayerBackedButton" customModule="DejaVideo" customModuleProvider="target">
+                    <rect key="frame" x="274" y="13" width="179" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="bevel" title="roadmap.dejavideo.app" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Zdc-gQ-aJ8">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                            <color key="value" red="0.87843137250000003" green="0.0" blue="0.49803921569999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                            <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="textColorSelected">
+                            <color key="value" red="0.54881922149999995" green="0.0" blue="0.31670669730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="fpsControlClicked:" target="-2" id="jRb-Zv-bd8"/>
+                    </connections>
+                </button>
+            </subviews>
+            <point key="canvasLocation" x="142" y="406"/>
         </customView>
     </objects>
 </document>

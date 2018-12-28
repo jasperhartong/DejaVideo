@@ -38,11 +38,25 @@ enum fragmentRecorderError: Error {
 
 struct ContinuousRecordingConfig {
     // How long do we retain recordings for? (seconds)
-    let retention: Double = 60.0
+    let retention: Double
     // Config defining in how many files to separate, defines diskspace
-    let fragmentInterval: Double = 0.33
+    let fps: Double
     // Config defining the scale in relation to the display
-    let scale: Double = 0.5
+    let scale: Double
+    
+    init(
+        retention: Double = 60.0,
+        fps: Double = 3.0,
+        scale: Double = 0.5
+    ) {
+        self.retention = retention
+        self.fps = fps
+        self.scale = scale
+    }
+    
+    var fragmentInterval: Double {
+        return 1.0 / fps
+    }
 }
 
 class TimeStamped: NSObject {
@@ -50,35 +64,22 @@ class TimeStamped: NSObject {
     public var modificationDate: Date = Date()
 }
 
-class RecordingFragment: TimeStamped {
-    private let manager: RecordingFragmentManager
-    private let index: Int
+class ScaledRecordingFragment: TimeStamped {
     private let scale: Double
-    private let fileNamePrefix = "RecordingFragment"
-    private let fileURL: URL
-    private var grabFrameTimer: Timer!
     public var mousePoint: CGPoint?
     public var image: CGImage?
     
-    private var isCurrentFragment: Bool {
-        return index == manager.nextFragmentCount - 1
-    }
-    
     override var description: String {
-        return "RecordingFragment:: \(fileURL)"
+        return "RecordingFragment"
     }
     
-    init(_ manager: RecordingFragmentManager, _ index: Int, scale: Double = 1.0) {
-        self.manager = manager
-        self.index = index
+    init(scale: Double = 1.0) {
         self.scale = scale
-        self.fileURL = NSURL.fileURL(withPathComponents: [
-            manager.fragmentDirectory,
-            "\(fileNamePrefix)\(manager.sharedUniqueString)\(index).png"
-            ])!
-
         super.init()
-
+        self.capture()
+    }
+    
+    func capture() {
         // Only record the display with menu bar
         if let screenWithMenuBarId = CGDirectDisplayID.withMenuBar {
             self.image = scaleImage(CGWindowListCreateImage(  // lower impact than CGDisplayCreateImage(delegate.screenId)
@@ -92,21 +93,7 @@ class RecordingFragment: TimeStamped {
                 self.mousePoint = scaleMousePoint(fakeEvent.location)
             }
         }
-        
     }
-    // USE FILTERS: Energy impact: HIGH + ~9 wakes per second..
-//    func scaleImage(_ cgImage: CGImage?) -> CGImage? {
-//        let ciImage = CIImage(cgImage: cgImage!)
-//
-//        let filter = CIFilter(name: "CILanczosScaleTransform")!
-//        filter.setValue(ciImage, forKey: "inputImage")
-//        filter.setValue(0.6, forKey: "inputScale")
-//        filter.setValue(1.0, forKey: "inputAspectRatio")
-//        let outputImage = filter.value(forKey: "outputImage") as! CIImage
-//
-//        let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-//        return context.createCGImage(outputImage, from: outputImage.extent)
-//    }
     
     // Use CGContext: Energy impact: LOW + ~9 wakes, 12.3RAM AFTER EXPORT: 26,8MB RAM
     func scaleImage(_ cgImage: CGImage?) -> CGImage? {
@@ -143,108 +130,6 @@ class RecordingFragment: TimeStamped {
         
         return CGPoint(x: Double(point!.x) * scale, y: Double(point!.y) * scale)
     }
-
-    
-    func toPNG() {
-        if let image = image, let destination = CGImageDestinationCreateWithURL(fileURL as CFURL, kUTTypePNG, 1, nil){
-            CGImageDestinationAddImage(destination, image, nil)
-            CGImageDestinationFinalize(destination)
-        }
-    }
-}
-
-class RecordingFragmentManager: TimeStamped {
-    private var fragmentTimer: RepeatingBackgroundTimer!
-    let fragmentDirectory = NSTemporaryDirectory()
-    let sharedUniqueString = NSUUID().uuidString
-    
-    var recordingFragments: [RecordingFragment] = []
-    var nextFragmentCount = 0
-    var isRecording: Bool = false
-    
-    private let retention: Double
-    private let interval: Double
-    private let scale: Double
-    
-    // Memory size: Set on first frame recording
-    var fragmentSize: Int? = nil
-    
-    @objc private func fragmentTimerFired() {
-        nextFragment()
-        vacuumFragments()
-    }
-
-    /**
-        Release references to old fragments so their deinit is called
-    */
-    private func vacuumFragments() {
-        let minRetentionDate = Date().addingTimeInterval(-retention)
-        recordingFragments = recordingFragments.filter{$0.creationDate > minRetentionDate}
-    }
-
-    /**
-        Initiates a new fragment and appends to recordingFragments
-     */
-    private func nextFragment() {
-        let next = RecordingFragment(self, nextFragmentCount, scale: self.scale)
-        
-        if fragmentSize == nil && next.image != nil  {
-           fragmentSize = next.image!.bytesPerRow * next.image!.height
-        }
-        
-        recordingFragments.append(next)
-        // Keep track of amount of fragments created during complete session
-        nextFragmentCount += 1
-    }
-    
-    // MARK: public
-    init(retention: Double, interval: Double, scale: Double) {
-        self.retention = retention
-        self.interval = interval
-        self.scale = scale
-    }
-    
-    func startFragmentTimer() {
-        if isRecording {
-            return
-        }
-        isRecording = true
-
-        // first fire immediatly
-        fragmentTimerFired()
-
-        fragmentTimer = RepeatingBackgroundTimer(timeInterval: interval)
-        fragmentTimer.eventHandler = {
-            self.fragmentTimerFired()
-        }
-        fragmentTimer.resume()
-    }
-    
-    func invalidateFragmentTimer() {
-        if !isRecording {
-            return
-        }
-        isRecording = false
-        if let timer = fragmentTimer {
-            timer.suspend()
-        }
-    }
-    
-    /**
-        Release references to all fragments so their deinit is called
-     */
-    func clearAllFragments() {
-        recordingFragments = []
-    }
-    
-    var allTimeFragmentCount: Int {
-        return nextFragmentCount - 1
-    }
-    
-    var currentFragmentCount: Int {
-        return recordingFragments.count
-    }
-    
 }
 
 // TODO: Implement the below in a statemachine with transitions
@@ -264,11 +149,13 @@ enum RecordingState: Int {
     case exporting
 }
 
+@objcMembers class ContinuousRecording: TimeStamped {
+    var config: ContinuousRecordingConfig
 
-@objcMembers class ContinuousRecording: RecordingFragmentManager {
-    let config: ContinuousRecordingConfig
-    
-    var exportFragments: [RecordingFragment] = []
+    var recordingFragments: [ScaledRecordingFragment] = []
+    private var exportFragments: [ScaledRecordingFragment] = []
+    private var fragmentTimer: RepeatingBackgroundTimer!
+    private var allTimeFragmentCount = 0
     
     private let stateKey: String = "ContinuousRecording::state"
     @objc dynamic var state: RecordingState = .idle {
@@ -277,43 +164,68 @@ enum RecordingState: Int {
         }
     }
     
-    private func recoverState() {
-        let recoveredState = RecordingState(rawValue: UserDefaults.standard.integer(forKey: stateKey))
-
-        // Restart recording if it wasn't idle before
-        if (recoveredState != .idle) {
-            start()
-        }
-    }
-    
     init(
         config: ContinuousRecordingConfig = ContinuousRecordingConfig()
         ) throws {
         self.config = config
-        super.init(retention: config.retention, interval: config.fragmentInterval, scale: config.scale)
+
+        super.init()
+
         recoverState()
     }
     
+    // MARK: Getters
+
+    /// Returns either the last recorded fragment, or a temporary fragment
+    var aFragment: ScaledRecordingFragment {
+        guard recordingFragments.count > 0 else {
+            return ScaledRecordingFragment(scale: config.scale)
+        }
+        return recordingFragments.last!
+    }
+    
+    /// Returns the current fragment count
+    var fragmentCount: Int {
+        return recordingFragments.count
+    }
+
+    /// Returns memory size of one fragment given the current config
+    var fragmentSize: Int {
+        let temporaryFragment = self.aFragment
+        
+        if let image = temporaryFragment.image {
+            return image.bytesPerRow * image.height
+        }
+        // Or return a realistic default like: 7056000 ?
+        return 0
+    }
+
+
+    // MARK: State transitions
+
+    /// State transition: Start
     func start() {
-        if (state != .idle) {
+        if state != .idle {
             return
         }
         startFragmentTimer()
         state = .recording
     }
-
+    
+    /// State transition: Stop
     func stop(clearFragments: Bool = false) {
-        if (state != .recording) {
+        if state != .recording {
             return
         }
         invalidateFragmentTimer()
 
         if clearFragments {
-            clearAllFragments()
+            recordingFragments = []
         }
         state = .idle
     }
     
+    /// State transition: Prep Exporting
     func prepExporting() -> Bool {
         if state != .recording {
             return false
@@ -326,6 +238,7 @@ enum RecordingState: Int {
         return true
     }
     
+    /// State transition: Cancel Prepped Export
     func cancelExport() -> Bool {
         if state != .preppedExport {
             return false
@@ -337,6 +250,7 @@ enum RecordingState: Int {
         return true
     }
     
+    /// State transition: Perform export
     func exportCurrentRetention(_ destination: URL, _ completion: @escaping ((URL?, Error?) -> Void)){
         // you can only export if it's prepped
         if state != .preppedExport {
@@ -387,4 +301,69 @@ enum RecordingState: Int {
             })
         }
     }
+    
+    /// State transition: Update config
+    func update(newConfig: ContinuousRecordingConfig) {
+        if state == .preppedExport || state == .exporting {
+            return
+        }
+        recordingFragments = []
+        config = newConfig
+        
+        // Not really changing state, staying in .idle or .recording depending on where we were
+    }
+    
+    // MARK: Private fragment management
+
+    @objc private func fragmentTimerFired() {
+        nextFragment()
+        vacuumFragments()
+    }
+    
+    /**
+     Initiates a new fragment and appends to recordingFragments
+     */
+    private func nextFragment() {
+        let next = ScaledRecordingFragment(scale: config.scale)
+        
+        recordingFragments.append(next)
+        // Keep track of amount of fragments created during complete session
+        allTimeFragmentCount += 1
+    }
+    
+    /**
+     Release references to old fragments so their deinit is called
+     */
+    private func vacuumFragments() {
+        let minRetentionDate = Date().addingTimeInterval(-config.retention)
+        recordingFragments = recordingFragments.filter{$0.creationDate > minRetentionDate}
+    }
+    
+    private func startFragmentTimer() {
+        // first fire immediatly
+        fragmentTimerFired()
+        
+        fragmentTimer = RepeatingBackgroundTimer(timeInterval: config.fragmentInterval)
+        fragmentTimer.eventHandler = {
+            self.fragmentTimerFired()
+        }
+        fragmentTimer.resume()
+    }
+    
+    private func invalidateFragmentTimer() {
+        if let timer = fragmentTimer {
+            timer.suspend()
+        }
+    }
+    
+    // MARK: Private state management
+    private func recoverState() {
+        let recoveredState = RecordingState(rawValue: UserDefaults.standard.integer(forKey: stateKey))
+        
+        // Restart recording if it wasn't idle before
+        if (recoveredState != .idle) {
+            start()
+        }
+    }
+
 }

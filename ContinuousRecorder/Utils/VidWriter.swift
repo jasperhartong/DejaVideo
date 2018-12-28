@@ -69,7 +69,7 @@ class VidWriter {
         self.frameTime = CMTimeMake(1, Int32(scale))
     }
     
-    func createMovieFrom(fragments: [RecordingFragment], completion: @escaping (URL) -> Void) {
+    func createMovieFrom(fragments: [ScaledRecordingFragment], completion: @escaping (URL) -> Void) {
         
         self.assetWriter.startWriting()
         self.assetWriter.startSession(atSourceTime: kCMTimeZero)

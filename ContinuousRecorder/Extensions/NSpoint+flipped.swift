@@ -1,5 +1,5 @@
 //
-//  NSpoint+inverted.swift
+//  NSpoint+flipped.swift
 //  ContinuousRecorder
 //
 //  Created by Jasper Hartong on 01/09/2018.

@@ -13,6 +13,7 @@ import CoreGraphics
 class AppDelegate: NSObject, NSApplicationDelegate {
     // Main recording object to inject into controllers
     @objc var recording: ContinuousRecording!
+
     // To keep track of main screen (== withMenuBar)
     private var currentMainScreenID: CGDirectDisplayID?
 
@@ -26,7 +27,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // Starting up the main app
     override init () {
         do {
-            recording = try ContinuousRecording()
+            let config = ContinuousRecordingConfig()
+            
+            recording = try ContinuousRecording(config:config)
             currentMainScreenID = CGDirectDisplayID.withMenuBar
         } catch { print(error.localizedDescription) }
         
@@ -66,7 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 notification -> Void in
                 if self.currentMainScreenID != CGDirectDisplayID.withMenuBar {
                     self.currentMainScreenID = CGDirectDisplayID.withMenuBar
-                    self.showSplashIfRecording()
+                    NSLog("Recorded screen changed to \(String(describing: self.currentMainScreenID))")
                 }
         }
     }

@@ -163,7 +163,7 @@ class RecordingProgressController: NSViewController {
     private var exportButtonTextTimer: Timer!
     
     @objc private func updateExportButtonText() {
-        let fragmentCount: Double = Double(recording.recordingFragments.count)
+        let fragmentCount: Double = Double(recording.fragmentCount)
         let fragmentInterval: Double = Double(recording.config.fragmentInterval)
         let exportableSeconds: Int = Int(fragmentCount * fragmentInterval)
         var readableTime = "\(exportableSeconds) seconds"

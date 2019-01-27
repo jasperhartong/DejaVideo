@@ -12,7 +12,38 @@ import Foundation
 import Cocoa
 
 class GeneralSettingsViewController: NSViewController {
+    private var lastImageFragmentTimer: Timer!
+    
 
+    @IBOutlet weak var scaleControl: NSSegmentedControl!
+    @IBAction func scaleControlClicked(_ sender: Any) {
+        updateConfiguration( ContinuousRecordingConfig(
+            retention: recording.config.retention,
+            fps: recording.config.fps,
+            scale: scales[scaleControl.selectedSegment]
+        ))
+    }
+    
+    @IBOutlet weak var fpsControl: NSSegmentedControl!
+    @IBAction func fpsControlClicked(_ sender: Any) {
+        updateConfiguration( ContinuousRecordingConfig(
+            retention: recording.config.retention,
+            fps: fpss[fpsControl.selectedSegment],
+            scale: recording.config.scale
+        ))
+    }
+    
+    @IBOutlet weak var retentionControl: NSSegmentedControl!
+    @IBAction func retentionControlClicked(_ sender: Any) {
+        updateConfiguration( ContinuousRecordingConfig(
+            retention: retentions[retentionControl.selectedSegment],
+            fps: recording.config.fps,
+            scale: recording.config.scale
+        ))
+    }
+    
+    @IBOutlet weak var lastImageFragment: NSImageCell!
+    
     @IBOutlet weak var launchAtLoginCheckbox: NSButton!
     @IBAction func launchAtLoginCheckboxClicked(_ sender: Any) {
         _ = LaunchService.shared.toggleLaunchAtLogin(launchAtLoginCheckbox.state == .on)
@@ -46,8 +77,66 @@ class GeneralSettingsViewController: NSViewController {
     }
     
     override func viewDidLoad() {
+        updateLastImageFragment()
         updateLaunchAtLoginCheckbox()
         updateRecordingSettingsLabel()
+        updateConfigControls()
+    }
+    
+    override func viewDidAppear() {
+        startLastImageFragmentTimer()
+    }
+    
+    override func viewDidDisappear() {
+        stopLastImageFragmentTimer()
+    }
+    
+    func startLastImageFragmentTimer() {
+        lastImageFragmentTimer = Timer.scheduledTimer(
+            timeInterval: 1,
+            target: self,
+            selector: #selector(updateLastImageFragment),
+            userInfo: nil,
+            repeats: true)
+    }
+    
+    func stopLastImageFragmentTimer() {
+        if let timer = lastImageFragmentTimer {
+            timer.invalidate()
+        }
+    }
+    
+    @objc func updateLastImageFragment() {
+        let fragment = recording.aFragment
+        if let image = fragment.image {
+            lastImageFragment.image = NSImage(
+                cgImage: image,
+                size: lastImageFragment.cellSize)
+        }
+    }
+    
+    private let scales: [Double] = [0.25, 0.5, 0.75, 1.0]
+    private let retentions: [Double] = [30.0, 60.0, 120.0]
+    private let fpss: [Double] = [1.0, 2.0, 3.0, 4.0, 5.0]
+    private func updateConfigControls() {
+        for (index, scale) in scales.enumerated() {
+            scaleControl.setLabel("\(scale)", forSegment: index)
+            if recording.config.scale == scale {
+                scaleControl.setSelected(true, forSegment: index)
+            }
+        }
+        for (index, retention) in retentions.enumerated() {
+            retentionControl.setLabel("\(Int(retention))", forSegment: index)
+            if recording.config.retention == retention {
+                retentionControl.setSelected(true, forSegment: index)
+            }
+        }
+        for (index, fps) in fpss.enumerated() {
+            fpsControl.setLabel("\(Int(fps))", forSegment: index)
+            if recording.config.fps == fps {
+                fpsControl.setSelected(true, forSegment: index)
+            }
+        }
     }
     
     func updateLaunchAtLoginCheckbox() {
@@ -57,11 +146,16 @@ class GeneralSettingsViewController: NSViewController {
     func updateRecordingSettingsLabel() {
         // TODO: Also format the duration in the string dynamically
         let fps = 1 / recording.config.fragmentInterval
-        let fragmentSize = recording.fragmentSize != nil ? recording.fragmentSize! : 7056000;
+        let fragmentSize = recording.fragmentSize;
         let estimatedRAM = fps * recording.config.retention * Double(fragmentSize)
-        let estimatedRAMStr: String = String(format: "%.1f GB.", estimatedRAM / 1_000_000_000)
+        let estimatedRAMStr: String = String(format: "%.1f GB", estimatedRAM / 1_000_000_000)
         
-        recordingSettingsLabel.stringValue = "DejaVideo records the last minute in \(Int(fps))fps on a \(recording.config.scale) scale (~\(estimatedRAMStr) RAM). Currently it only records the display that holds the menubar."
+        recordingSettingsLabel.stringValue = "Approximate RAM usage: \(estimatedRAMStr)"
+    }
+    
+    func updateConfiguration(_ config: ContinuousRecordingConfig) {
+        recording.update( newConfig: config )
+        updateRecordingSettingsLabel()
     }
     
 }

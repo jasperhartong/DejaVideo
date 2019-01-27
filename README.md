@@ -1,5 +1,16 @@
 #  Continuous Recorder
 
+TODO: Let this README not suck
+
+## Running it
+
+Open up the .xcodeproj, run and DejaVideo should appear in your menu bar.
+
+## Packing the release in a dmg
+
+- Build a release
+- Use https://github.com/sindresorhus/create-dmg
+
 ## Starting at login
 
 In order to let this work during development, there should be only 1 app found for the bundle identifier of the LauncherApplication.

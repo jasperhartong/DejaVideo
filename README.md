@@ -1,6 +1,6 @@
 #  Continuous Recorder
 
-TODO: Let this README not suck
+This code was my first stab at using Swift. I never got around to writing a proper README at the time and now future me is kind of mad at past me. It's source is now public, because.. why not?
 
 ## Running it
 

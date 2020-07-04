@@ -1,23 +1,30 @@
 <h1 align="center">DejaVideo</h1>
+<h3 align="center"><a href="https://dejavideo.app">dejavideo.app</a></h3>
 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/47074382/86510743-9ce1cb00-bdf2-11ea-9295-832d2ba67660.png" alt="DejaVideo Logo" />
 </div>
 
 <div align="center">
-  <sub>A small screen recording utility. Built with ❤︎ by
+  <sub>A small Mac screen recording utility. Built with ❤︎ by
   <a href="https://twitter.com/jasperhartong">Jasper Hartong</a>
 </div>
 
-## Disclaimer
+## Releases
+
+* [v1.0.2](https://github.com/jasperhartong/DejaVideo/releases/tag/v1.0.2) – The initial release of DejaVideo plus some additional minor fixes.
+* v1.1.0 – **[Unreleased]** Adds additional settings for scaling/ fps and interval to record. See PR #1
+
+## ⚠️ Disclaimer
 
 This code was my first stab at using Swift. I never got around to writing a proper README at the time and now future me is kind of mad at past me. It's source is now public, because.. why not?
 
-## Running it
+
+## 🔨 Development Tips
+
+### Running it
 
 Open up the .xcodeproj, run and DejaVideo should appear in your menu bar.
-
-## Development Tips
 
 ### Packing the release in a dmg
 

@@ -12,7 +12,11 @@
 
 <div align="center">
   <sub>Built with ❤︎ by
-  <a href="https://twitter.com/jasperhartong">Jasper Hartong</a>
+    <a href="https://twitter.com/jasperhartong">Jasper Hartong</a>
+  </sub>
+  <br/>
+  <img src="https://img.shields.io/endpoint?url=https://emittime.app%2Fapi%2Ftime-horizon%2Fjasperhartong%2Fshield&style=flat-square"
+    alt="Emit/Time Shield" />
 </div>
   
 ## About
@@ -80,3 +84,4 @@ In the end `deblonde.LauncherApplication` should be registered in launchctl, you
 $launchctl list
 $launchctl remove deblonde.LauncherApplication
 ```
+

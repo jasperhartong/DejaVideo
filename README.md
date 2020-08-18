@@ -33,6 +33,8 @@ DejaVideo lives in your menu bar. It allows you to record your screen continuous
 * Opens the screen recording in QuickTime upong exporting. Hit <code>⌘ T</code> and trim it to your needs.
 * Has a fancy loading animation to indicate which screen is being recorded
 
+<a href="https://www.producthunt.com/posts/dejavideo?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-dejavideo" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=141896&theme=light" alt="DejaVideo - Continuous screen recorder for Mac, jump back anytime. | Product Hunt Embed" style="width: 250px; height: 54px;" width="250px" height="54px" /></a>
+
 ## Releases
 
 * [v1.0.2](https://github.com/jasperhartong/DejaVideo/releases/tag/v1.0.2) – The initial release of DejaVideo plus some additional minor fixes.

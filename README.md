@@ -16,8 +16,7 @@
   </sub>
   <br/>
   <br/>
-  <img src="https://img.shields.io/endpoint?url=https://emittime.app%2Fapi%2Ftime-horizon%2Fjasperhartong%2Fshield&style=flat-square"
-    alt="Emit/Time Shield" />
+  <img src="https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Femittime.app%2Fapi%2Fshieldio%2FQgAxKVLdk" alt="Emit/Time Shield" />
 </div>
   
 ## About
